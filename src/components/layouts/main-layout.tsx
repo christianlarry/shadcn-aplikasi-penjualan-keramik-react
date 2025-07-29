@@ -1,4 +1,6 @@
 import { Outlet } from "react-router"
+import Header from "../common/header/header"
+import Container from "../common/container/container"
 
 interface Props{
   children?:React.ReactNode
@@ -9,7 +11,12 @@ const MainLayout = ({
 }:Props) => {
   return (
     <div>
-      {children || <Outlet/>}
+      <Header/>
+      <main className="mt-4">
+        <Container>
+          {children || <Outlet/>}
+        </Container>
+      </main>
     </div>
   )
 }
