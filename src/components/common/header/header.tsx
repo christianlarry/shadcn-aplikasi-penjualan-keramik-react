@@ -10,7 +10,7 @@ const DASHBOARD_BASE_URL = import.meta.env.VITE_DASHBOARD_BASE_URL || "/"
 
 const Header = () => {
   return (
-    <header>
+    <header className="relative z-50">
       <Container className="flex justify-between items-center py-6">
         <Link to={"/"}>
           <div className="w-[260px]">
