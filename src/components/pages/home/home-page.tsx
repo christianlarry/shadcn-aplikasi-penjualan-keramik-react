@@ -1,7 +1,45 @@
 import heroImage from "@/assets/images/hero/hero-image-1.jpg"
 import CatalogCard from "@/components/common/card/catalog-card"
+import ProductCard from "@/components/common/card/product-card"
 import SearchBar from "@/components/common/input/search-bar"
 import SectionHeader from "@/components/ui/section-header"
+import type { Product } from "@/types/product"
+
+const product:Product = {
+            "_id": "683154122817740b69b1e100",
+            "name": "KIA Mosaic Blue",
+            "description": "Glossy blue mosaic tiles for decorative walls.",
+            "specification": {
+                "application": [
+                    "Dinding"
+                ],
+                "color": [
+                    "Blue",
+                    "White"
+                ],
+                "design": "Mosaic",
+                "finishing": "Glossy",
+                "texture": "Smooth",
+                "size": {
+                    "height": 30,
+                    "width": 30
+                },
+                "isSlipResistant": false,
+                "isWaterResistant": true
+            },
+            "brand": "KIA",
+            "price": 65000,
+            "recommended": [
+                "Dapur",
+                "Kamar Mandi"
+            ],
+            "createdAt": new Date("2025-05-24T05:07:30.222Z"),
+            "updatedAt": new Date("2025-07-26T12:52:23.884Z"),
+            "isBestSeller": true,
+            "isNewArrivals": true,
+            "image": "uploads\\images\\products\\kia-mosaic-blue-1753854636697.jpeg",
+            "finalPrice": 65000
+        }
 
 const HomePage = () => {
   return (
@@ -31,7 +69,7 @@ const HomePage = () => {
         <section>
           <SectionHeader title="Katalog Ubin"/>
           
-          <div className="grid grid-cols-4 gap-6">
+          <div className="grid grid-cols-4 gap-8">
             <CatalogCard
               label="Semua Produk"
               imgSrc="https://s7d1.scene7.com/is/image/TileShop/484942_51_REN:3x2?fmt=webp"
@@ -58,8 +96,10 @@ const HomePage = () => {
         <section>
           <SectionHeader title="Ubin Terbaik"/>
 
-          <div>
-            
+          <div className="grid grid-cols-3 gap-8">
+            <ProductCard product={product}/>
+            <ProductCard product={product}/>
+            <ProductCard product={product}/>
           </div>
         </section>
       </div>

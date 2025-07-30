@@ -17,6 +17,7 @@ const MainLayout = ({
           {children || <Outlet/>}
         </Container>
       </main>
+      <footer className="mt-12"></footer>
     </div>
   )
 }
