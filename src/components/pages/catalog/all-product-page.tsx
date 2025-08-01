@@ -1,10 +1,15 @@
+import BreadcrumbsSection from "@/components/common/sections/breadcrumbs-section"
+
 const AllProductsPage = () => {
   return (
-    <>
-      <header>
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sequi facere hic, excepturi porro quis iure, inventore dignissimos quia magnam quisquam officiis incidunt pariatur architecto cumque aperiam minima voluptate ad ab?
-      </header>
-    </>
+    <div className="flex flex-col gap-12">
+
+      <BreadcrumbsSection/>
+
+      <section>
+        
+      </section>
+    </div>
   )
 }
 
