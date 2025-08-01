@@ -13,7 +13,7 @@ const ProductCard = ({
 }:Props) => {
   return (
     <div className="group/card">
-      <div className="aspect-square rounded-md overflow-hidden relative">
+      <div className="aspect-square bg-muted rounded-md overflow-hidden relative">
         {product.image &&
           <img
             src={getProductImgUrl(product.image)}

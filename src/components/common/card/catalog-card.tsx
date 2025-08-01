@@ -14,7 +14,7 @@ const CatalogCard = ({
   href
 }:Props) => {
   return (
-    <div className="aspect-square bg-zinc-200 rounded-md overflow-hidden relative group/card">
+    <div className="aspect-square bg-muted rounded-md overflow-hidden relative group/card">
       <div className="relative z-10 w-full h-full flex flex-col justify-end p-4 px-8 backdrop-brightness-80 group-hover/card:backdrop-brightness-95 transition duration-500">
         <Button className="flex justify-between" variant="secondary" asChild>
           <Link to={href}>

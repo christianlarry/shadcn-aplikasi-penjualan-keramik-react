@@ -1,4 +1,6 @@
 import heroImage from "@/assets/images/hero/hero-image-1.jpg"
+import calculatorBannerImage from "@/assets/images/calculator-banner-image.webp"
+
 import CatalogCard from "@/components/common/card/catalog-card"
 import SearchBar from "@/components/common/input/search-bar"
 import ProductSlider, { type ProductSliderRef } from "@/components/common/slider/product-slider"
@@ -6,8 +8,11 @@ import { Button } from "@/components/ui/button"
 import type { CarouselApi } from "@/components/ui/carousel"
 import SectionHeader from "@/components/ui/section-header"
 import type { Product } from "@/types/product"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { Calculator, ChevronLeft, ChevronRight, Map, ShoppingCart } from "lucide-react"
 import { useRef, useState } from "react"
+import { Link } from "react-router"
+import Logo from "@/components/common/logo/logo"
+import { EXTERNAL_LINKS } from "@/constants/links.strings"
 
 const product:Product = {
             "_id": "683154122817740b69b1e100",
@@ -91,6 +96,36 @@ const HomePage = () => {
       </section>
 
       <div className="flex flex-col gap-20">
+
+        <section>
+          <div className="flex flex-col items-center">
+            <div className="w-1/2 flex flex-col items-center">
+              <div className="w-[500px]">
+                <Logo/>
+              </div>
+              <p className="text-center">Temukan berbagai pilihan ubin keramik berkualitas tinggi untuk mempercantik rumah dan bangunan Anda. CV Aneka Keramik siap memenuhi kebutuhan interior dan eksterior Anda.</p>
+
+              <div className="mt-4 flex gap-2">
+                <Button variant="outline" asChild>
+                  <Link to="/catalog/all-products">
+                    <ShoppingCart/>Katalog
+                  </Link>
+                </Button>
+                <Button variant="outline" asChild>
+                  <Link to="/tile-calculator">
+                    <Calculator/>Kalkulator Ubin
+                  </Link>
+                </Button>
+                <Button asChild>
+                  <a href={EXTERNAL_LINKS.gmapsLocation} target="_blank">
+                    <Map/>Find Shop
+                  </a>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section>
           <SectionHeader title="Katalog Ubin"/>
           
@@ -152,7 +187,32 @@ const HomePage = () => {
         </section>
 
         <section>
-          
+          <div className="w-full bg-primary flex rounded-md overflow-hidden">
+            <div className="w-[45%] relative">
+              <div className="absolute inset-0">
+                <img 
+                  src={calculatorBannerImage}
+                  alt="Kalkulator Ubin"
+                  className="w-full h-full block object-cover object-center"
+                  loading="lazy"
+                />
+              </div>
+            </div>
+            <div className="flex-1 text-primary-foreground p-10 py-16">
+              <div className="flex flex-col gap-8 items-start">
+                <div>
+                  <span className="font-semibold text-muted underline">Fitur Utama</span>
+                  <h2 className="text-5xl font-bold mt-2">Bingung berapa ubin yang anda butuhkan?</h2>
+                  <p className="mt-2">Gunakan kalkulator otomatis kami buat hitung ubin hanya dalam hitungan detik.</p>
+                </div>
+                <Button variant="secondary" asChild>
+                  <Link to="/tile-calculator">
+                    Coba Sekarang <ChevronRight/>
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          </div>
         </section>
       </div>
     </div>
