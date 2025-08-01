@@ -2,8 +2,10 @@ import heroImage from "@/assets/images/hero/hero-image-1.jpg"
 import CatalogCard from "@/components/common/card/catalog-card"
 import ProductCard from "@/components/common/card/product-card"
 import SearchBar from "@/components/common/input/search-bar"
+import { Button } from "@/components/ui/button"
 import SectionHeader from "@/components/ui/section-header"
 import type { Product } from "@/types/product"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 
 const product:Product = {
             "_id": "683154122817740b69b1e100",
@@ -94,7 +96,17 @@ const HomePage = () => {
         </section>
 
         <section>
-          <SectionHeader title="Ubin Terbaik"/>
+          <div className="flex justify-between gap-4">
+            <SectionHeader title="Ubin Terbaik"/>
+            <div className="flex gap-1">
+              <Button variant={"outline"} size={"icon"} className="rounded-sm" disabled>
+                <ChevronLeft/>
+              </Button>
+              <Button variant={"outline"} size={"icon"} className="rounded-sm">
+                <ChevronRight/>
+              </Button>
+            </div>
+          </div>
 
           <div className="grid grid-cols-3 gap-8">
             <ProductCard product={product}/>

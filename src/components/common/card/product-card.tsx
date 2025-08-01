@@ -30,10 +30,10 @@ const ProductCard = ({
         <div className="absolute inset-0 p-4">
           <div className="flex gap-1">
             {product.isBestSeller &&
-              <Badge variant={"destructive"}>Best Seller</Badge>
+              <Badge variant={"secondary"}>Best Seller</Badge>
             }
             {product.isNewArrivals &&
-              <Badge className="bg-yellow-500">New</Badge>
+              <Badge variant={"secondary"}>New</Badge>
             }
           </div>
         </div>
