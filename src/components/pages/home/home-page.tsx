@@ -99,13 +99,13 @@ const HomePage = () => {
 
         <section>
           <div className="flex flex-col items-center">
-            <div className="w-1/2 flex flex-col items-center">
-              <div className="w-[500px]">
+            <div className="max-w-[500px] flex flex-col items-center">
+              <div className="max-w-[500px]">
                 <Logo/>
               </div>
               <p className="text-center">Temukan berbagai pilihan ubin keramik berkualitas tinggi untuk mempercantik rumah dan bangunan Anda. CV Aneka Keramik siap memenuhi kebutuhan interior dan eksterior Anda.</p>
 
-              <div className="mt-4 flex gap-2">
+              <div className="mt-4 flex flex-wrap gap-2 justify-center">
                 <Button variant="outline" asChild>
                   <Link to="/catalog/all-products">
                     <ShoppingCart/>Katalog
