@@ -41,8 +41,8 @@ const SearchBar = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    {PENGAPLIKASIAN_SELECT_ITEMS.map(item=>(
-                      <SelectItem value={item.value}>{item.label}</SelectItem>
+                    {PENGAPLIKASIAN_SELECT_ITEMS.map((item,idx)=>(
+                      <SelectItem key={idx} value={item.value}>{item.label}</SelectItem>
                     ))}
                   </SelectGroup>
                 </SelectContent>
@@ -61,8 +61,8 @@ const SearchBar = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    {RUANGAN_SELECT_ITEMS.map(item=>(
-                      <SelectItem value={item.value}>{item.label}</SelectItem>
+                    {RUANGAN_SELECT_ITEMS.map((item,idx)=>(
+                      <SelectItem key={idx} value={item.value}>{item.label}</SelectItem>
                     ))}
                   </SelectGroup>
                 </SelectContent>

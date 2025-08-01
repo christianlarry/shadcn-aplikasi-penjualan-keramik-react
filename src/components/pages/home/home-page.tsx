@@ -1,11 +1,13 @@
 import heroImage from "@/assets/images/hero/hero-image-1.jpg"
 import CatalogCard from "@/components/common/card/catalog-card"
-import ProductCard from "@/components/common/card/product-card"
 import SearchBar from "@/components/common/input/search-bar"
+import ProductSlider, { type ProductSliderRef } from "@/components/common/slider/product-slider"
 import { Button } from "@/components/ui/button"
+import type { CarouselApi } from "@/components/ui/carousel"
 import SectionHeader from "@/components/ui/section-header"
 import type { Product } from "@/types/product"
 import { ChevronLeft, ChevronRight } from "lucide-react"
+import { useRef, useState } from "react"
 
 const product:Product = {
             "_id": "683154122817740b69b1e100",
@@ -44,6 +46,27 @@ const product:Product = {
         }
 
 const HomePage = () => {
+
+  const sliderRef = useRef<ProductSliderRef>(null)
+  const [isFirstProductSlider,setIsFirstProductSlider] = useState<boolean>(false)
+  const [isLastProductSlider,setIsLastProductSlider] = useState<boolean>(false)
+
+  const handleProductSliderSelect = (api:CarouselApi)=>{
+    if(api){
+      if(!api.canScrollNext()){
+        setIsLastProductSlider(true)
+      }else{
+        setIsLastProductSlider(false)
+      }
+
+      if(!api.canScrollPrev()){
+        setIsFirstProductSlider(true)
+      }else{
+        setIsFirstProductSlider(false)
+      }
+    }
+  }
+
   return (
     <div className="flex flex-col gap-12">
 
@@ -71,7 +94,7 @@ const HomePage = () => {
         <section>
           <SectionHeader title="Katalog Ubin"/>
           
-          <div className="grid grid-cols-4 gap-8">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
             <CatalogCard
               label="Semua Produk"
               imgSrc="https://s7d1.scene7.com/is/image/TileShop/484942_51_REN:3x2?fmt=webp"
@@ -99,20 +122,37 @@ const HomePage = () => {
           <div className="flex justify-between gap-4">
             <SectionHeader title="Ubin Terbaik"/>
             <div className="flex gap-1">
-              <Button variant={"outline"} size={"icon"} className="rounded-sm" disabled>
+              <Button 
+                variant={"outline"} 
+                size={"icon"} 
+                className="rounded-sm" 
+                onClick={()=>sliderRef.current?.scrollPrev()}
+                disabled={isFirstProductSlider}
+              >
                 <ChevronLeft/>
               </Button>
-              <Button variant={"outline"} size={"icon"} className="rounded-sm">
+              <Button 
+                variant={"outline"} 
+                size={"icon"} 
+                className="rounded-sm" 
+                onClick={()=>sliderRef.current?.scrollNext()}
+                disabled={isLastProductSlider}
+              >
                 <ChevronRight/>
               </Button>
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-8">
-            <ProductCard product={product}/>
-            <ProductCard product={product}/>
-            <ProductCard product={product}/>
-          </div>
+          <ProductSlider
+            ref={sliderRef}
+            products={Array.from({length: 6}).map(()=>product)}
+            onSelect={handleProductSliderSelect}
+          />
+
+        </section>
+
+        <section>
+          
         </section>
       </div>
     </div>
