@@ -1,5 +1,6 @@
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
 import { useLocation } from "react-router"
+import { Fragment } from "react/jsx-runtime"
 
 interface BreadcrumbItem{
   label:string,
@@ -35,8 +36,8 @@ const BreadcrumbsSection = () => {
       <Breadcrumb>
         <BreadcrumbList>
           {breadcrumbItem.map((item,idx)=>(
-            <>
-              <BreadcrumbItem key={idx}>
+            <Fragment key={idx}>
+              <BreadcrumbItem>
                 {item.href && <BreadcrumbLink href={item.href}>{item.label}</BreadcrumbLink>}
                 {!item.href && <BreadcrumbPage className="font-semibold">{item.label}</BreadcrumbPage>}
               </BreadcrumbItem>
@@ -44,7 +45,7 @@ const BreadcrumbsSection = () => {
               {idx < breadcrumbItem.length-1 &&
                 <BreadcrumbSeparator />
               }
-            </>
+            </Fragment>
           ))}
         </BreadcrumbList>
       </Breadcrumb>

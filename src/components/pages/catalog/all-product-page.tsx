@@ -1,3 +1,4 @@
+import Catalog from "@/components/common/catalog/catalog"
 import BreadcrumbsSection from "@/components/common/sections/breadcrumbs-section"
 
 const AllProductsPage = () => {
@@ -6,8 +7,8 @@ const AllProductsPage = () => {
 
       <BreadcrumbsSection/>
 
-      <section>
-        
+      <section id="product-catalog">
+        <Catalog/>
       </section>
     </div>
   )
