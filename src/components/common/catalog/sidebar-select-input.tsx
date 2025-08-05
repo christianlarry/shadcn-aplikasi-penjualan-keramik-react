@@ -16,13 +16,13 @@ interface Props{
   onChange:(value:Options[])=>void
 }
 
-const SidebarFilterInput = ({
+const SidebarSelectInput = ({
   headLabel,
   value,
   options,
   onChange
 }:Props) => {
-  
+
   const handleCheckboxChange = (checked:boolean,option:Options)=>{
     if(Array.isArray(value)){
       if(!checked){
@@ -38,9 +38,11 @@ const SidebarFilterInput = ({
   return (
     <Collapsible>
       <CollapsibleTrigger asChild>
-        <Button variant="ghost" className="font-normal text-base w-full text-start py-2 h-fit flex justify-between">
+        <Button variant="ghost" className="font-normal text-base w-full text-start py-2 h-fit flex justify-between group/collapsible">
           {headLabel}
-          <ChevronRight />
+          <ChevronRight
+            className="transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
+          />
         </Button>
       </CollapsibleTrigger>
       <CollapsibleContent>
@@ -65,4 +67,4 @@ const SidebarFilterInput = ({
   )
 }
 
-export default SidebarFilterInput
+export default SidebarSelectInput

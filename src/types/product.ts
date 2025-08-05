@@ -26,3 +26,14 @@ export interface Product{
   createdAt: Date,
   updatedAt: Date
 }
+
+interface FilterOption{
+  label:string,
+  value:string
+}
+
+export interface ProductFilterOptions{
+  _id: string,
+  type:string,
+  options:FilterOption[]
+}
