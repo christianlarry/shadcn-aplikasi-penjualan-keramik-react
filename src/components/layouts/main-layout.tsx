@@ -2,6 +2,7 @@ import { Outlet } from "react-router"
 import Header from "../common/header/header"
 import Container from "../common/container/container"
 import Footer from "../common/footer/footer"
+import TilecalculatorFeatureSection from "../common/sections/tilecalculator-feature-section"
 
 interface Props{
   children?:React.ReactNode
@@ -20,6 +21,7 @@ const MainLayout = ({
           </Container>
         </main>
       </div>
+      <TilecalculatorFeatureSection/>
       <Footer className="mt-20"/>
     </div>
   )

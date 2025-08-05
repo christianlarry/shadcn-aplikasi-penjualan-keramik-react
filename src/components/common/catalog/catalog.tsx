@@ -1,4 +1,6 @@
+
 import CatalogSidebar from "./catalog-sidebar"
+import CatalogTop from "./catalog-top"
 
 const Catalog = () => {
   return (
@@ -6,8 +8,12 @@ const Catalog = () => {
       
       <CatalogSidebar/>
 
-      <div className="h-xl bg-muted-foreground w-full">
+      <div className="w-full flex flex-col gap-12">
+        <CatalogTop/>
 
+        <section id="catalog-cards">
+          
+        </section>
       </div>
     </div>
   )

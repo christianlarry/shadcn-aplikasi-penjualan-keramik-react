@@ -15,15 +15,19 @@ const AppRouter = ()=>{
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <MainLayout/>,
       errorElement: <ErrorPage/>,
       children: [
-        { index: true, element: <HomePage/> },
-        { path: "catalog", element: <Navigate to={"/catalog/all-products"} replace/> },
-        { path: "catalog/all-products", element: <AllProductsPage/> },
-        { path: "catalog/best-seller", element: <BestSellerPage/> },
-        { path: "catalog/new-arrivals", element: <NewArrivalsPage/> },
-        { path: "catalog/discount", element: <DiscountPage/> },
+        {
+          element: <MainLayout/>,
+          children: [
+            { index: true, element: <HomePage/> },
+            { path: "catalog", element: <Navigate to={"/catalog/all-products"} replace/> },
+            { path: "catalog/all-products", element: <AllProductsPage/> },
+            { path: "catalog/best-seller", element: <BestSellerPage/> },
+            { path: "catalog/new-arrivals", element: <NewArrivalsPage/> },
+            { path: "catalog/discount", element: <DiscountPage/> },
+          ]
+        },
         { path: "tile-calculator", element: <TileCalculatorPage/> }
       ]
     }
