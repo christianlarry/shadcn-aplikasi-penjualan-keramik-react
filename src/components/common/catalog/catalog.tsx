@@ -16,7 +16,16 @@ const Catalog = () => {
   const {filters,sort} = useCatalog()
 
   const {data} = useProductQuery({
-    page: page
+    page: page,
+    filters:{
+      application: filters["application"],
+      color: filters["color"],
+      design: filters["design"],
+      texture: filters["texture"],
+      finishing: filters["finishing"],
+      size: filters["size"]
+    },
+    sort: sort
   })
 
   const location = useLocation()
