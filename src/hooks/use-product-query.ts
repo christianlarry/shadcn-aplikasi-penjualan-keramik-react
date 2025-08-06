@@ -10,7 +10,7 @@ export const useProductQuery = ()=>{
       const {data} = await api.get<GetProductResponse>(buildUrlWithParams("/product",
         {
           pagination_page: 1,
-          pagination_size: 12
+          pagination_size: 1
         }
       ))
       

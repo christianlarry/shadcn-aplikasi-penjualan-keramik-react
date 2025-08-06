@@ -5,13 +5,6 @@ import CatalogSidebar from "./catalog-sidebar"
 import CatalogTop from "./catalog-top"
 import { useProductQuery } from "@/hooks/use-product-query"
 
-const pagination = {
-  size: 12,
-  current: 20,
-  total: 100,
-  totalPages: 20
-}
-
 const Catalog = () => {
 
   const {data} = useProductQuery()
@@ -31,14 +24,16 @@ const Catalog = () => {
             ))}
           </div>
         </section>
-
-        <section id="catalog-pagination" className="mt-4">
-          <Pagination
-            totalPages={pagination.totalPages}
-            current={pagination.current}
-            limit={9}
-          />
-        </section>
+        
+        {data &&
+          <section id="catalog-pagination" className="mt-4">
+            <Pagination
+              totalPages={data.page.totalPages}
+              current={data.page.current}
+              limit={9}
+            />
+          </section>
+        }
       </div>
     </div>
   )
