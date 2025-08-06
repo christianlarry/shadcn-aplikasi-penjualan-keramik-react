@@ -39,9 +39,9 @@ const ProductCard = ({
         </div>
       </div>
       <div className="flex gap-4 justify-between mt-6">
-        <div className="flex-1 flex flex-col gap-2">
-          <p>
-            {product.name} | <span className="font-semibold">{product.specification.size.width}x{product.specification.size.height}cm</span>
+        <div className="w-[70%] flex flex-col gap-2">
+          <p className="truncate">
+            {product.name} | <span className="font-semibold text-sm">{product.specification.size.width}x{product.specification.size.height}cm</span>
           </p>
           <h3 className="font-semibold text-xl">Rp{formatCurrency(product.finalPrice)}</h3>
         </div>

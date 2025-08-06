@@ -1,3 +1,5 @@
+import type { Pagination } from "./pagination"
+
 export interface Product{
   _id?: string,
   name: string,
@@ -25,6 +27,10 @@ export interface Product{
   recommended?: string[],
   createdAt: Date,
   updatedAt: Date
+}
+export interface GetProductResponse {
+  data:Product[],
+  page:Pagination
 }
 
 interface FilterOption{

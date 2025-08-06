@@ -6,6 +6,7 @@ export const useProductFiltersQuery = ()=>{
     queryKey: ["products","filter-options"],
     queryFn: async ()=>{
       const {data} = await api.get("/product/filter-options")
+      
       return data
     }
   })

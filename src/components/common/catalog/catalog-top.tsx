@@ -9,6 +9,7 @@ import { useLocation, useNavigate } from "react-router"
 const CatalogTop = () => {
 
   const [filters,setFilters] = useState<{key:string,value:string}[]>([])
+  const [sort,setSort] = useState<string|undefined>(undefined)
 
   const location = useLocation()
   const navigate = useNavigate()
@@ -30,6 +31,12 @@ const CatalogTop = () => {
     })
 
     setFilters(newFilter)
+    
+    if(searchParams.has("sort_by")){
+      setSort(searchParams.get("sort_by") ?? undefined)
+    }else{
+      setSort(undefined)
+    }
 
   },[location])
 
@@ -43,6 +50,19 @@ const CatalogTop = () => {
     navigate([location.pathname,searchParams.toString()].join("?"))
   }
 
+  const setSortInSearchParams = (sortValue:string|null)=>{
+    const searchParams = new URLSearchParams(location.search)
+
+    if(sortValue){
+      searchParams.set("sort_by",sortValue)
+    }else{
+      searchParams.delete("sort_by")
+    }
+
+
+    navigate([location.pathname,searchParams.toString()].join("?"))
+  }
+
   return (
     <section id="catalog-top">
       <div className="flex flex-col gap-4">
@@ -50,7 +70,7 @@ const CatalogTop = () => {
           <p className="text-sm">Menampilkan <span className="font-semibold">9</span> produk dari total <span className="font-semibold">105</span></p>
           <div className="flex items-center gap-2">
             <span className="text-sm">Urutkan Berdasarkan</span>
-            <Select>
+            <Select onValueChange={(val)=>setSortInSearchParams(val)} value={sort ?? ""}>
               <SelectTrigger>
                 <SelectValue placeholder="Pilih" />
               </SelectTrigger>
@@ -62,6 +82,9 @@ const CatalogTop = () => {
                 ))}
               </SelectContent>
             </Select>
+            {sort &&
+              <Button size="icon" variant="outline" onClick={()=>setSortInSearchParams(null)}><X/></Button>
+            }
           </div>
         </div>
         {filters.length > 0 &&
