@@ -3,14 +3,20 @@ import { buildUrlWithParams } from "@/lib/utils"
 import type { GetProductResponse } from "@/types/product"
 import { useQuery } from "@tanstack/react-query"
 
-export const useProductQuery = ()=>{
+interface GetProductParams{
+  page:number
+}
+
+export const useProductQuery = ({
+  page
+}:GetProductParams)=>{
   return useQuery({
-    queryKey: ["products"],
+    queryKey: ["products",page],
     queryFn: async ()=>{
       const {data} = await api.get<GetProductResponse>(buildUrlWithParams("/product",
         {
-          pagination_page: 1,
-          pagination_size: 1
+          pagination_page: page,
+          pagination_size: 12
         }
       ))
       

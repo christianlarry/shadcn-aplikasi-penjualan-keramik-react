@@ -2,14 +2,24 @@
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { FILTER_OPTIONS_CONFIG, SORT_PRODUCT_OPTIONS } from "@/constants/catalog"
+import { useCatalog } from "@/contexts/catalog-context"
 import { X } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router"
 
-const CatalogTop = () => {
+interface Props{
+  config:{
+    totalData:number,
+    showedData:number
+  }
+}
+
+const CatalogTop = ({
+  config
+}:Props) => {
 
   const [filters,setFilters] = useState<{key:string,value:string}[]>([])
-  const [sort,setSort] = useState<string|undefined>(undefined)
+  const {sort,setSort} = useCatalog()
 
   const location = useLocation()
   const navigate = useNavigate()
@@ -33,12 +43,12 @@ const CatalogTop = () => {
     setFilters(newFilter)
     
     if(searchParams.has("sort_by")){
-      setSort(searchParams.get("sort_by") ?? undefined)
+      setSort(searchParams.get("sort_by") ?? null)
     }else{
-      setSort(undefined)
+      setSort(null)
     }
 
-  },[location])
+  },[location,setSort])
 
   const removeFilter = (rmvFltr:{key:string,value:string})=>{
     const searchParams = new URLSearchParams(location.search)
@@ -67,7 +77,7 @@ const CatalogTop = () => {
     <section id="catalog-top">
       <div className="flex flex-col gap-4">
         <div className="flex flex-wrap justify-between items-center">
-          <p className="text-sm">Menampilkan <span className="font-semibold">9</span> produk dari total <span className="font-semibold">105</span></p>
+          <p className="text-sm">Menampilkan <span className="font-semibold">{config.showedData}</span> produk dari total <span className="font-semibold">{config.totalData}</span></p>
           <div className="flex items-center gap-2">
             <span className="text-sm">Urutkan Berdasarkan</span>
             <Select onValueChange={(val)=>setSortInSearchParams(val)} value={sort ?? ""}>

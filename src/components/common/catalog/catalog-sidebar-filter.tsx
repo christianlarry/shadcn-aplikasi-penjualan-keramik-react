@@ -1,10 +1,11 @@
 import { useProductFiltersQuery } from '@/hooks/use-product-filters-query'
 import SidebarSelectInput, { type Options } from './sidebar-select-input'
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, useEffect } from 'react'
 import type { ProductFilterOptions } from '@/types/product'
 import { useLocation, useNavigate } from 'react-router'
 import { Separator } from '@/components/ui/separator'
 import { FILTER_OPTIONS_CONFIG } from '@/constants/catalog'
+import { useCatalog } from '@/contexts/catalog-context'
 
 const CatalogSidebarFilter = () => {
 
@@ -12,14 +13,7 @@ const CatalogSidebarFilter = () => {
   const location = useLocation()
 
   // Filters State
-  const [filters, setFilters] = useState<Record<string, Options[] | null>>({
-    design: null,
-    application: null,
-    texture: null,
-    finishing: null,
-    color: null,
-    size: null
-  })
+  const {filters,setFilters} = useCatalog()
 
   // Get Options
   const {data} = useProductFiltersQuery()
@@ -57,7 +51,7 @@ const CatalogSidebarFilter = () => {
 
     setFilters(nextFilter)
 
-  },[location])
+  },[location,setFilters])
 
   return (
     <div className="flex flex-col gap-2">
