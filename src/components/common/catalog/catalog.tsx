@@ -7,10 +7,17 @@ import CatalogTop from "./catalog-top"
 import { useProductQuery } from "@/hooks/use-product-query"
 import { useLocation, useNavigate } from "react-router"
 import { useCatalog } from "@/contexts/catalog-context"
+import { Button } from "@/components/ui/button"
 
 const PAGINATION_LIMIT = 9
 
-const Catalog = () => {
+interface Props{
+  category?: "default" | "bestSeller" | "newArrivals" | "discount"
+}
+
+const Catalog = ({
+  category="default"
+}:Props) => {
 
   const [page,setPage] = useState<number>(1)
   const {filters,sort} = useCatalog()
@@ -25,7 +32,10 @@ const Catalog = () => {
       finishing: filters["finishing"],
       size: filters["size"]
     },
-    sort: sort
+    sort: sort,
+    isBestSeller: category==="bestSeller",
+    isDiscount: category==="discount",
+    isNewArrivals: category==="newArrivals"
   })
 
   const location = useLocation()
@@ -65,6 +75,12 @@ const Catalog = () => {
             {data && data.data.map((product,idx)=>(
               <ProductCard product={product} key={product._id ?? idx}/>
             ))}
+
+            {(data && data.data.length < 1) &&
+              <div className="flex items-center justify-center col-span-3">
+                <Button className="text-center" variant={"outline"}>Produk tidak ada:(</Button>
+              </div>
+            }
           </div>
         </section>
         

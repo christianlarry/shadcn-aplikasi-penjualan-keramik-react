@@ -1,4 +1,6 @@
+import Catalog from "@/components/common/catalog/catalog"
 import BreadcrumbsSection from "@/components/common/sections/breadcrumbs-section"
+import { CatalogProvider } from "@/contexts/catalog-context"
 
 const NewArrivalsPage = () => {
   return (
@@ -6,8 +8,10 @@ const NewArrivalsPage = () => {
 
       <BreadcrumbsSection/>
 
-      <section>
-        
+      <section id="product-catalog">
+        <CatalogProvider>
+          <Catalog category="newArrivals"/>
+        </CatalogProvider>
       </section>
     </div>
   )

@@ -7,8 +7,9 @@ import { useQuery } from "@tanstack/react-query"
 type FilterType = Options[]|null
 
 interface GetProductParams{
-  page:number,
-  filters:{
+  page?:number,
+  size?:number,
+  filters?:{
     application:FilterType,
     design:FilterType,
     texture:FilterType,
@@ -16,28 +17,45 @@ interface GetProductParams{
     finishing:FilterType,
     size:FilterType
   },
-  sort:string|null
+  sort?:string|null,
+  isBestSeller?:boolean,
+  isNewArrivals?:boolean,
+  isDiscount?:boolean,
 }
 
 export const useProductQuery = ({
-  page,
-  filters,
-  sort
+  page=1,
+  size=12,
+  filters={
+    application: null,
+    color: null,
+    design: null,
+    finishing: null,
+    size: null,
+    texture: null
+  },
+  sort=null,
+  isBestSeller=false,
+  isDiscount=false,
+  isNewArrivals=false
 }:GetProductParams)=>{
   return useQuery({
-    queryKey: ["products",page,filters,sort],
+    queryKey: ["products",page,size,filters,sort,isBestSeller,isNewArrivals,isDiscount],
     queryFn: async ()=>{
       const {data} = await api.get<GetProductResponse>(buildUrlWithParams("/product",
         {
           pagination_page: page,
-          pagination_size: 12,
+          pagination_size: size,
           application: filters.application?.map(filter=>filter.value),
           texture: filters.texture?.map(filter=>filter.value),
           design: filters.design?.map(filter=>filter.value),
           color: filters.color?.map(filter=>filter.value),
           finishing: filters.finishing?.map(filter=>filter.value),
           size: filters.size?.map(filter=>filter.value),
-          order_by: sort ?? undefined
+          order_by: sort ?? undefined,
+          bestSeller: isBestSeller,
+          newArrivals: isNewArrivals,
+          discounted: isDiscount
         }
       ))
       

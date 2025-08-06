@@ -1,4 +1,6 @@
+import Catalog from "@/components/common/catalog/catalog"
 import BreadcrumbsSection from "@/components/common/sections/breadcrumbs-section"
+import { CatalogProvider } from "@/contexts/catalog-context"
 
 const DiscountPage = () => {
   return (
@@ -6,8 +8,10 @@ const DiscountPage = () => {
 
       <BreadcrumbsSection/>
 
-      <section>
-        
+      <section id="product-catalog">
+        <CatalogProvider>
+          <Catalog category="discount"/>
+        </CatalogProvider>
       </section>
     </div>
   )

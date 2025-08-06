@@ -6,50 +6,21 @@ import ProductSlider, { type ProductSliderRef } from "@/components/common/slider
 import { Button } from "@/components/ui/button"
 import type { CarouselApi } from "@/components/ui/carousel"
 import SectionHeader from "@/components/ui/section-header"
-import type { Product } from "@/types/product"
 import { Calculator, ChevronLeft, ChevronRight, Map, ShoppingCart } from "lucide-react"
 import { useRef, useState } from "react"
 import { Link } from "react-router"
 import Logo from "@/components/common/logo/logo"
 import { EXTERNAL_LINKS } from "@/constants/links.strings"
-
-const product:Product = {
-            "_id": "683154122817740b69b1e100",
-            "name": "KIA Mosaic Blue",
-            "description": "Glossy blue mosaic tiles for decorative walls.",
-            "specification": {
-                "application": [
-                    "Dinding"
-                ],
-                "color": [
-                    "Blue",
-                    "White"
-                ],
-                "design": "Mosaic",
-                "finishing": "Glossy",
-                "texture": "Smooth",
-                "size": {
-                    "height": 30,
-                    "width": 30
-                },
-                "isSlipResistant": false,
-                "isWaterResistant": true
-            },
-            "brand": "KIA",
-            "price": 65000,
-            "recommended": [
-                "Dapur",
-                "Kamar Mandi"
-            ],
-            "createdAt": new Date("2025-05-24T05:07:30.222Z"),
-            "updatedAt": new Date("2025-07-26T12:52:23.884Z"),
-            "isBestSeller": true,
-            "isNewArrivals": true,
-            "image": "uploads\\images\\products\\kia-mosaic-blue-1753854636697.jpeg",
-            "finalPrice": 65000
-        }
+import { useProductQuery } from "@/hooks/use-product-query"
 
 const HomePage = () => {
+
+  // Get 6 Best Seller Product
+  const {data} = useProductQuery({
+    page: 1,
+    size: 6,
+    isBestSeller: true
+  })
 
   const sliderRef = useRef<ProductSliderRef>(null)
   const [isFirstProductSlider,setIsFirstProductSlider] = useState<boolean>(false)
@@ -177,11 +148,13 @@ const HomePage = () => {
             </div>
           </div>
 
-          <ProductSlider
-            ref={sliderRef}
-            products={Array.from({length: 6}).map(()=>product)}
-            onSelect={handleProductSliderSelect}
-          />
+          {data &&
+            <ProductSlider
+              ref={sliderRef}
+              products={data.data}
+              onSelect={handleProductSliderSelect}
+            />
+          }
 
         </section>
       </div>
