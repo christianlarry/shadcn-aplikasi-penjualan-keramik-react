@@ -4,33 +4,7 @@ import { Fragment, useEffect, useState } from 'react'
 import type { ProductFilterOptions } from '@/types/product'
 import { useLocation, useNavigate } from 'react-router'
 import { Separator } from '@/components/ui/separator'
-
-const FILTER_OPTIONS_CONFIG = [
-  {
-    label: "Pengaplikasian",
-    key: "application",
-  },
-  {
-    label: "Desain",
-    key: "design",
-  },
-  {
-    label: "Tekstur",
-    key: "texture",
-  },
-  {
-    label: "Sentuhan Akhir",
-    key: "finishing",
-  },
-  {
-    label: "Warna",
-    key: "color",
-  },
-  {
-    label: "Ukuran",
-    key: "size",
-  },
-]
+import { FILTER_OPTIONS_CONFIG } from '@/constants/catalog'
 
 const CatalogSidebarFilter = () => {
 
@@ -61,8 +35,6 @@ const CatalogSidebarFilter = () => {
       filterOptions.forEach(val => {
         searchParams.append(key, val.value)
       })
-    } else {
-      searchParams.delete(key)
     }
 
     navigate([location.pathname, searchParams.toString()].join("?"))
@@ -71,25 +43,20 @@ const CatalogSidebarFilter = () => {
   useEffect(()=>{
     const searchParams = new URLSearchParams(location.search)
 
+    const nextFilter:Record<string,Options[]|null> = {}
+
     FILTER_OPTIONS_CONFIG.forEach(({key}) => {
       if (searchParams.has(key)) {
         const filterParams = searchParams.getAll(key)
-
-        setFilters(prev => {
-          return {
-            ...prev,
-            [key]: filterParams.map(val => ({ label: val, value: val }))
-          }
-        })
+        nextFilter[key] = filterParams.map(val => ({ label: val, value: val }))
+      
       } else {
-        setFilters(prev => {
-          return {
-            ...prev,
-            [key]: null
-          }
-        })
+        nextFilter[key] = null
       }
     })
+
+    setFilters(nextFilter)
+
   },[location])
 
   return (

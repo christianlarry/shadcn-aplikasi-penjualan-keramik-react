@@ -3,6 +3,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { Label } from '@/components/ui/label'
 import { ChevronRight } from "lucide-react"
+import { useState } from "react"
 
 export interface Options{
   label:string
@@ -23,6 +24,8 @@ const SidebarSelectInput = ({
   onChange
 }:Props) => {
 
+  const [isOpen,setIsOpen] = useState<boolean>(!!value)
+
   const handleCheckboxChange = (checked:boolean,option:Options)=>{
     if(Array.isArray(value)){
       if(!checked){
@@ -36,7 +39,7 @@ const SidebarSelectInput = ({
   }
 
   return (
-    <Collapsible>
+    <Collapsible open={isOpen} onOpenChange={(open)=>setIsOpen(open)}>
       <CollapsibleTrigger asChild>
         <Button variant="ghost" className="font-normal text-base w-full text-start py-2 h-fit flex justify-between group/collapsible">
           {headLabel}
