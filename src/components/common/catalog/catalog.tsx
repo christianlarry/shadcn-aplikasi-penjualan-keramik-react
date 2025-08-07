@@ -20,7 +20,7 @@ const Catalog = ({
 }:Props) => {
 
   const [page,setPage] = useState<number>(1)
-  const {filters,sort} = useCatalog()
+  const {filters,sort,search} = useCatalog()
 
   const {data} = useProductQuery({
     page: page,
@@ -33,6 +33,7 @@ const Catalog = ({
       size: filters["size"]
     },
     sort: sort,
+    search: search,
     isBestSeller: category==="bestSeller",
     isDiscount: category==="discount",
     isNewArrivals: category==="newArrivals"

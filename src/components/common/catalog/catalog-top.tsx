@@ -20,8 +20,9 @@ const CatalogTop = ({
 }:Props) => {
 
   const [filters,setFilters] = useState<{key:string,value:string}[]>([])
-  const {sort,setSort} = useCatalog()
-  const [searchKeyword,setSearchKeyword] = useState<string>("")
+  const {sort,setSort,setSearch} = useCatalog()
+
+  const [searchInput,setSearchInput] = useState<string>("")
 
   const location = useLocation()
   const navigate = useNavigate()
@@ -50,7 +51,13 @@ const CatalogTop = ({
       setSort(null)
     }
 
-  },[location,setSort])
+    if(searchParams.has("search")){
+      setSearch(searchParams.get("search") ?? "")
+    }else{
+      setSearch("")
+    }
+
+  },[location,setSort,setSearch])
 
   const removeFilter = (rmvFltr:{key:string,value:string})=>{
     const searchParams = new URLSearchParams(location.search)
@@ -76,7 +83,15 @@ const CatalogTop = ({
   }
 
   const setSearchInSearchParams = (keyword:string)=>{
-    console.log(keyword)
+    const searchParams = new URLSearchParams(location.search)
+
+    if(keyword.length > 0){
+      searchParams.set("search",keyword)
+    }else{
+      searchParams.delete("search")
+    }
+
+    navigate([location.pathname,searchParams.toString()].join("?"))
   }
 
   return (
@@ -87,8 +102,9 @@ const CatalogTop = ({
           <div className="flex gap-2">
             <SearchInput
               onSearch={(keyword)=>setSearchInSearchParams(keyword)}
-              value={searchKeyword}
-              onChange={(val)=>setSearchKeyword(val)}
+              value={searchInput}
+              onChange={(val)=>setSearchInput(val)}
+              placeholder="Cari: Nama | Deskripsi | dll"
             />
             <div className="flex items-center gap-2">
               <Select onValueChange={(val)=>setSortInSearchParams(val)} value={sort ?? ""}>

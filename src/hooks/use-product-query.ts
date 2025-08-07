@@ -17,6 +17,7 @@ interface GetProductParams{
     finishing:FilterType,
     size:FilterType
   },
+  search?:string,
   sort?:string|null,
   isBestSeller?:boolean,
   isNewArrivals?:boolean,
@@ -34,13 +35,14 @@ export const useProductQuery = ({
     size: null,
     texture: null
   },
+  search,
   sort=null,
   isBestSeller=false,
   isDiscount=false,
   isNewArrivals=false
 }:GetProductParams)=>{
   return useQuery({
-    queryKey: ["products",page,size,filters,sort,isBestSeller,isNewArrivals,isDiscount],
+    queryKey: ["products",page,size,filters,search,sort,isBestSeller,isNewArrivals,isDiscount],
     queryFn: async ()=>{
       const {data} = await api.get<GetProductResponse>(buildUrlWithParams("/product",
         {
@@ -55,7 +57,8 @@ export const useProductQuery = ({
           order_by: sort ?? undefined,
           bestSeller: isBestSeller,
           newArrivals: isNewArrivals,
-          discounted: isDiscount
+          discounted: isDiscount,
+          search:search
         }
       ))
       

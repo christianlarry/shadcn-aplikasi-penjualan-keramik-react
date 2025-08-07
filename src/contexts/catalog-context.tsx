@@ -6,6 +6,8 @@ interface CatalogContextType{
   setFilters:React.Dispatch<React.SetStateAction<Record<string,Options[]|null>>>
   sort:string|null
   setSort:React.Dispatch<React.SetStateAction<string|null>>
+  search:string,
+  setSearch:React.Dispatch<React.SetStateAction<string>>
 }
 
 const CatalogContext = createContext<CatalogContextType|undefined>(undefined)
@@ -21,12 +23,15 @@ export const CatalogProvider = ({children}:{children:React.ReactNode})=>{
     size: null
   })
   const [sort,setSort] = useState<string|null>(null)
+  const [search,setSearch] = useState<string>("")
 
   const providerValue:CatalogContextType = {
     filters,
     setFilters,
     setSort,
-    sort
+    sort,
+    search,
+    setSearch
   }
 
   return (
