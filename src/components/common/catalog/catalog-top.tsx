@@ -6,6 +6,7 @@ import { useCatalog } from "@/contexts/catalog-context"
 import { X } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router"
+import SearchInput from "../input/search-input"
 
 interface Props{
   config:{
@@ -20,6 +21,7 @@ const CatalogTop = ({
 
   const [filters,setFilters] = useState<{key:string,value:string}[]>([])
   const {sort,setSort} = useCatalog()
+  const [searchKeyword,setSearchKeyword] = useState<string>("")
 
   const location = useLocation()
   const navigate = useNavigate()
@@ -73,28 +75,38 @@ const CatalogTop = ({
     navigate([location.pathname,searchParams.toString()].join("?"))
   }
 
+  const setSearchInSearchParams = (keyword:string)=>{
+    console.log(keyword)
+  }
+
   return (
     <section id="catalog-top">
       <div className="flex flex-col gap-4">
         <div className="flex flex-wrap justify-between items-center">
           <p className="text-sm">Menampilkan <span className="font-semibold">{config.showedData}</span> produk dari total <span className="font-semibold">{config.totalData}</span></p>
-          <div className="flex items-center gap-2">
-            <span className="text-sm">Urutkan Berdasarkan</span>
-            <Select onValueChange={(val)=>setSortInSearchParams(val)} value={sort ?? ""}>
-              <SelectTrigger>
-                <SelectValue placeholder="Pilih" />
-              </SelectTrigger>
-              <SelectContent>
-                {SORT_PRODUCT_OPTIONS.map(opt=>(
-                  <SelectItem value={opt.value} key={opt.value}>
-                    {opt.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {sort &&
-              <Button size="icon" variant="outline" onClick={()=>setSortInSearchParams(null)}><X/></Button>
-            }
+          <div className="flex gap-2">
+            <SearchInput
+              onSearch={(keyword)=>setSearchInSearchParams(keyword)}
+              value={searchKeyword}
+              onChange={(val)=>setSearchKeyword(val)}
+            />
+            <div className="flex items-center gap-2">
+              <Select onValueChange={(val)=>setSortInSearchParams(val)} value={sort ?? ""}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Sort By" />
+                </SelectTrigger>
+                <SelectContent>
+                  {SORT_PRODUCT_OPTIONS.map(opt=>(
+                    <SelectItem value={opt.value} key={opt.value}>
+                      {opt.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {sort &&
+                <Button size="icon" variant="outline" onClick={()=>setSortInSearchParams(null)}><X/></Button>
+              }
+            </div>
           </div>
         </div>
         {filters.length > 0 &&
