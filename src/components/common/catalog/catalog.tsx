@@ -5,9 +5,10 @@ import Pagination from "../pagination/pagination"
 import CatalogSidebar from "./catalog-sidebar"
 import CatalogTop from "./catalog-top"
 import { useProductQuery } from "@/hooks/use-product-query"
-import { useLocation, useNavigate } from "react-router"
+import { useLocation } from "react-router"
 import { useCatalog } from "@/contexts/catalog-context"
 import { Button } from "@/components/ui/button"
+import { useSearchParams } from "@/hooks/use-search-params"
 
 const PAGINATION_LIMIT = 9
 
@@ -40,19 +41,17 @@ const Catalog = ({
   })
 
   const location = useLocation()
-  const navigate = useNavigate()
+
+  const {searchParamsHas,getSearchParams,setSearchParams} = useSearchParams()
 
   useEffect(()=>{
-
-    const searchParams = new URLSearchParams(location.search)
     
-    if(searchParams.has("page")){
-      const pageInParams = searchParams.get("page") || "1"
+    if(searchParamsHas("page")){
+      const pageInParams = getSearchParams("page") || "1"
       const parsedPage = parseInt(pageInParams)
 
       if(isNaN(parsedPage)){
-        searchParams.set("page","1")
-        navigate([location.pathname,searchParams.toString()].join("?"))
+        setSearchParams("page","1")
       }else{
         setPage(parsedPage)
       }
@@ -61,7 +60,7 @@ const Catalog = ({
       setPage(1)
     }
 
-  },[location,navigate])
+  },[location,getSearchParams,searchParamsHas,setSearchParams])
 
   return (
     <div className="flex gap-6 items-start">

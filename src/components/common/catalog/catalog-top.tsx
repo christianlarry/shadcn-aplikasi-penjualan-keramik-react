@@ -5,8 +5,9 @@ import { FILTER_OPTIONS_CONFIG, SORT_PRODUCT_OPTIONS } from "@/constants/catalog
 import { useCatalog } from "@/contexts/catalog-context"
 import { X } from "lucide-react"
 import { useEffect, useState } from "react"
-import { useLocation, useNavigate } from "react-router"
+import { useLocation } from "react-router"
 import SearchInput from "../input/search-input"
+import { useSearchParams } from "@/hooks/use-search-params"
 
 interface Props{
   config:{
@@ -25,17 +26,21 @@ const CatalogTop = ({
   const [searchInput,setSearchInput] = useState<string>("")
 
   const location = useLocation()
-  const navigate = useNavigate()
+
+  const {
+    setSearchParams,
+    deleteSearchParams,
+    searchParamsHas,
+    getAllSearchParams,
+    getSearchParams
+  } = useSearchParams()
 
   useEffect(()=>{
-
-    const searchParams = new URLSearchParams(location.search)
-
     const newFilter:{key:string,value:string}[] = []
     
     FILTER_OPTIONS_CONFIG.forEach(({key})=>{
-      if(searchParams.has(key)){
-        const filterParams = searchParams.getAll(key)
+      if(searchParamsHas(key)){
+        const filterParams = getAllSearchParams(key)
 
         filterParams.forEach(paramVal=>{
           newFilter.push({key,value:paramVal})
@@ -45,53 +50,42 @@ const CatalogTop = ({
 
     setFilters(newFilter)
     
-    if(searchParams.has("sort_by")){
-      setSort(searchParams.get("sort_by") ?? null)
+    if(searchParamsHas("sort_by")){
+      setSort(getSearchParams("sort_by") ?? null)
     }else{
       setSort(null)
     }
 
-    if(searchParams.has("search")){
-      setSearch(searchParams.get("search") ?? "")
+    if(searchParamsHas("search")){
+      setSearch(getSearchParams("search") ?? "")
     }else{
       setSearch("")
     }
 
-  },[location,setSort,setSearch])
+  },[location,setSort,setSearch,searchParamsHas,getAllSearchParams,getSearchParams])
 
   const removeFilter = (rmvFltr:{key:string,value:string})=>{
-    const searchParams = new URLSearchParams(location.search)
-    
-    if(searchParams.has(rmvFltr.key)){
-      searchParams.delete(rmvFltr.key,rmvFltr.value)
+
+    if(searchParamsHas(rmvFltr.key)){
+      deleteSearchParams(rmvFltr.key,rmvFltr.value)
     }
-    
-    navigate([location.pathname,searchParams.toString()].join("?"))
+
   }
 
   const setSortInSearchParams = (sortValue:string|null)=>{
-    const searchParams = new URLSearchParams(location.search)
-
     if(sortValue){
-      searchParams.set("sort_by",sortValue)
+      setSearchParams("sort_by",sortValue)
     }else{
-      searchParams.delete("sort_by")
+      deleteSearchParams("sort_by")
     }
-
-
-    navigate([location.pathname,searchParams.toString()].join("?"))
   }
 
   const setSearchInSearchParams = (keyword:string)=>{
-    const searchParams = new URLSearchParams(location.search)
-
     if(keyword.length > 0){
-      searchParams.set("search",keyword)
+      setSearchParams("search",keyword)
     }else{
-      searchParams.delete("search")
+      deleteSearchParams("search")
     }
-
-    navigate([location.pathname,searchParams.toString()].join("?"))
   }
 
   return (
