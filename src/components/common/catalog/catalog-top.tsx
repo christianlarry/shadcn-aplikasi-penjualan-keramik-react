@@ -58,6 +58,7 @@ const CatalogTop = ({
 
     if(searchParamsHas("search")){
       setSearch(getSearchParams("search") ?? "")
+      setSearchInput(getSearchParams("search") ?? "")
     }else{
       setSearch("")
     }

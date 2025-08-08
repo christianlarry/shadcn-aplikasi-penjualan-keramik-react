@@ -65,11 +65,16 @@ export const useSearchParams = ()=>{
     return searchParams.getAll(key)
   },[location])
 
+  const navigateWithParams = useCallback((pathname:string,params:URLSearchParams)=>{
+    navigate([pathname,params.toString()].join("?"))
+  },[navigate])
+
   return {
     setSearchParams,
     deleteSearchParams,
     searchParamsHas,
     getSearchParams,
-    getAllSearchParams
+    getAllSearchParams,
+    navigateWithParams
   }
 }
