@@ -24,6 +24,10 @@ const BREADCRUMBS_MAP:Record<string,BreadcrumbItem[]> = {
     {label: "Home", href: "/"},
     {label: "Sedang Diskon"},
   ],
+  "catalog/product/:id": [
+    {label: "Home", href: "/"},
+    {label: "Sedang Diskon"},
+  ]
 }
 
 const BreadcrumbsSection = () => {

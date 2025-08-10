@@ -9,6 +9,7 @@ import NewArrivalsPage from "../components/pages/catalog/new-arrivals-page"
 import DiscountPage from "../components/pages/catalog/discount-page"
 import TileCalculatorPage from "../components/pages/tile-calculator/tile-calculator-page"
 import ErrorPage from "@/components/pages/errors/error-page"
+import ProductDetailPage from "@/components/pages/catalog/product/product-detail-page"
 
 const AppRouter = ()=>{
 
@@ -26,6 +27,7 @@ const AppRouter = ()=>{
             { path: "catalog/best-seller", element: <BestSellerPage/> },
             { path: "catalog/new-arrivals", element: <NewArrivalsPage/> },
             { path: "catalog/discount", element: <DiscountPage/> },
+            { path: "catalog/product/:id", element: <ProductDetailPage/> },
           ]
         },
         { path: "tile-calculator", element: <TileCalculatorPage/> }

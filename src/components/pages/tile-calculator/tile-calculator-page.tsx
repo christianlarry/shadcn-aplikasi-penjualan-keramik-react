@@ -1,3 +1,4 @@
+import TileCalculatorCanvas from "@/components/common/canvas/tile-calculator-canvas"
 import Container from "@/components/common/container/container"
 import Footer from "@/components/common/footer/footer"
 import Header from "@/components/common/header/header"
@@ -10,8 +11,10 @@ const TileCalculatorPage = () => {
         <main className="mt-4">
           <Container>
               
-            <h2>Tile Calculator page</h2>
-
+            <TileCalculatorCanvas
+              tileHeight={50}
+              tileWidth={50}
+            />
           </Container>
         </main>
       </div>
