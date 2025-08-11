@@ -1,7 +1,7 @@
 import type { Options } from "@/components/common/catalog/sidebar-select-input"
 import api from "@/lib/api"
 import { buildUrlWithParams } from "@/lib/utils"
-import type { GetProductResponse } from "@/types/product"
+import type { GetProductResponse, GetSingleProductResponse } from "@/types/product"
 import { useQuery } from "@tanstack/react-query"
 
 type FilterType = Options[]|null
@@ -62,6 +62,17 @@ export const useProductQuery = ({
         }
       ))
       
+      return data
+    }
+  })
+}
+
+export const useSingleProductQuery = (productId:string)=>{
+  return useQuery({
+    queryKey: ["product",productId],
+    queryFn: async ()=>{
+      const {data} = await api.get<GetSingleProductResponse>(`/product/${productId}`)
+
       return data
     }
   })

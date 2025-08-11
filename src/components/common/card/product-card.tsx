@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { formatCurrency, getProductImgUrl } from "@/lib/utils"
 import type { Product } from "@/types/product"
 import { ShoppingCart } from "lucide-react"
+import { Link } from "react-router"
 
 interface Props{
   product:Product
@@ -35,6 +36,9 @@ const ProductCard = ({
             {product.isNewArrivals &&
               <Badge variant={"secondary"}>New</Badge>
             }
+            {product.discount && (
+              <Badge variant={"destructive"}>-{product.discount}%</Badge>
+            )}
           </div>
         </div>
       </div>
@@ -43,10 +47,26 @@ const ProductCard = ({
           <p className="truncate">
             {product.name} | <span className="font-semibold text-sm">{product.specification.size.width}x{product.specification.size.height}cm</span>
           </p>
-          <h3 className="font-semibold text-xl">Rp{formatCurrency(product.finalPrice)}</h3>
+          {/* Harga */}
+          {product.discount ? (
+            <div className="flex flex-col">
+              <span className="text-sm line-through text-muted-foreground">
+                Rp{formatCurrency(product.price)}
+              </span>
+              <span className="font-semibold text-xl">
+                Rp{formatCurrency(product.finalPrice)}
+              </span>
+            </div>
+          ) : (
+            <h3 className="font-semibold text-xl">
+              Rp{formatCurrency(product.price)}
+            </h3>
+          )}
         </div>
-        <Button size="icon" className="size-12">
-          <ShoppingCart className="size-5" />
+        <Button size="icon" className="size-12" asChild>
+          <Link to={`/catalog/product/${product._id}`}>
+            <ShoppingCart className="size-5" />
+          </Link>
         </Button>
       </div>
     </div>

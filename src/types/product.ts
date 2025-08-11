@@ -32,6 +32,9 @@ export interface GetProductResponse {
   data:Product[],
   page:Pagination
 }
+export interface GetSingleProductResponse {
+  data:Product,
+}
 
 interface FilterOption{
   label:string,

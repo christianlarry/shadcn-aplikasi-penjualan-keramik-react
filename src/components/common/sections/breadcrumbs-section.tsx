@@ -1,5 +1,6 @@
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
-import { Link, useLocation } from "react-router"
+import { useEffect, useState } from "react"
+import { Link, useLocation, useParams } from "react-router"
 import { Fragment } from "react/jsx-runtime"
 
 interface BreadcrumbItem{
@@ -32,14 +33,40 @@ const BREADCRUMBS_MAP:Record<string,BreadcrumbItem[]> = {
 
 const BreadcrumbsSection = () => {
 
+  const [customBreadcrumb,setCustomBreadcrumb] = useState<BreadcrumbItem[] | undefined>(undefined) 
+
   const location = useLocation()
+  const params = useParams()
   const breadcrumbItem:BreadcrumbItem[] = BREADCRUMBS_MAP[location.pathname] ?? []
+
+  useEffect(()=>{
+    if(params.id){
+      setCustomBreadcrumb([
+        {label: "Home", href: "/"},
+        {label: "Catalog", href: "/catalog/all-products"},
+        {label: `Product | ${params.id}`}
+      ])
+    }
+  },[location,params])
 
   return (
     <section id="page-breadcrumbs" className="mt-4">
       <Breadcrumb>
         <BreadcrumbList>
-          {breadcrumbItem.map((item,idx)=>(
+          {customBreadcrumb && customBreadcrumb.map((item,idx)=>(
+            <Fragment key={idx}>
+              <BreadcrumbItem>
+                {item.href && <BreadcrumbLink asChild><Link to={item.href}>{item.label}</Link></BreadcrumbLink>}
+                {!item.href && <BreadcrumbPage className="font-semibold">{item.label}</BreadcrumbPage>}
+              </BreadcrumbItem>
+
+              {idx < customBreadcrumb.length-1 &&
+                <BreadcrumbSeparator />
+              }
+            </Fragment>
+          ))}
+
+          {!customBreadcrumb && breadcrumbItem.map((item,idx)=>(
             <Fragment key={idx}>
               <BreadcrumbItem>
                 {item.href && <BreadcrumbLink asChild><Link to={item.href}>{item.label}</Link></BreadcrumbLink>}
