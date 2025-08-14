@@ -1,4 +1,8 @@
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import { Redo, Undo, ZoomIn, ZoomOut } from "lucide-react";
 import React, { useRef, useState, useEffect, useCallback } from "react";
 
 interface Point {
@@ -533,27 +537,55 @@ const TileCalculatorCanvas: React.FC<RoomCanvasProps> = ({
         {/* Zoom Controls */}
         <div className="space-y-2">
           <h4 className="font-semibold text-gray-700">Zoom & Pan</h4>
-          <div className="flex space-x-2">
-            <button
-              onClick={() => setScale(prev => Math.min(MAX_ZOOM, prev * 1.2))}
-              disabled={scale >= MAX_ZOOM}
-              className="px-3 py-1 bg-blue-500 text-white rounded disabled:bg-gray-300 text-sm"
-            >
-              Zoom In
-            </button>
-            <button
-              onClick={() => setScale(prev => Math.max(MIN_ZOOM, prev / 1.2))}
-              disabled={scale <= MIN_ZOOM}
-              className="px-3 py-1 bg-blue-500 text-white rounded disabled:bg-gray-300 text-sm"
-            >
-              Zoom Out
-            </button>
-            <button
-              onClick={() => { setScale(1); setPanOffset({ x: 0, y: 0 }); }}
-              className="px-3 py-1 bg-gray-500 text-white rounded text-sm"
-            >
-              Reset View
-            </button>
+          <div className="flex space-x-1">
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={() => setScale(prev => Math.min(MAX_ZOOM, prev * 1.2))}
+                  disabled={scale >= MAX_ZOOM}
+                  size={'icon'}
+                  variant={"outline"}
+                >
+                  <ZoomIn/>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Zoom In</p>
+              </TooltipContent>
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={() => setScale(prev => Math.max(MIN_ZOOM, prev / 1.2))}
+                  disabled={scale <= MIN_ZOOM}
+                  size={'icon'}
+                  variant={"outline"}
+                >
+                  <ZoomOut/>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Zoom Out</p>
+              </TooltipContent>
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant={"outline"}
+                  onClick={() => { setScale(1); setPanOffset({ x: 0, y: 0 }); }}
+                >
+                  Reset View
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Reset Tampilan zoom dan pan</p>
+              </TooltipContent>
+            </Tooltip>
+
+            
           </div>
           <p className="text-xs text-gray-500">Ctrl+Scroll untuk zoom<br/>Ctrl+Click untuk pan</p>
         </div>
@@ -563,28 +595,25 @@ const TileCalculatorCanvas: React.FC<RoomCanvasProps> = ({
           <h4 className="font-semibold text-gray-700">Tampilan</h4>
           <div className="space-y-1">
             <label className="flex items-center space-x-2 text-sm">
-              <input
-                type="checkbox"
+              <Checkbox
                 checked={showGrid}
-                onChange={(e) => setShowGrid(e.target.checked)}
+                onCheckedChange={(val) => setShowGrid((val as boolean))}
                 className="rounded"
               />
               <span>Tampilkan Grid</span>
             </label>
             <label className="flex items-center space-x-2 text-sm">
-              <input
-                type="checkbox"
+              <Checkbox
                 checked={showMeasurements}
-                onChange={(e) => setShowMeasurements(e.target.checked)}
+                onCheckedChange={(val) => setShowMeasurements((val as boolean))}
                 className="rounded"
               />
               <span>Tampilkan Ukuran</span>
             </label>
             <label className="flex items-center space-x-2 text-sm">
-              <input
-                type="checkbox"
+              <Checkbox
                 checked={isSnapping}
-                onChange={(e) => setIsSnapping(e.target.checked)}
+                onCheckedChange={(val) => setIsSnapping((val as boolean))}
                 className="rounded"
               />
               <span>Snap to Grid</span>
@@ -595,28 +624,54 @@ const TileCalculatorCanvas: React.FC<RoomCanvasProps> = ({
         {/* Action Controls */}
         <div className="space-y-2">
           <h4 className="font-semibold text-gray-700">Actions</h4>
-          <div className="flex space-x-2">
-            <button
-              onClick={handleUndo}
-              disabled={undoStack.length === 0}
-              className="px-3 py-1 bg-yellow-500 text-white rounded disabled:bg-gray-300 text-sm"
-            >
-              Undo
-            </button>
-            <button
-              onClick={handleRedo}
-              disabled={redoStack.length === 0}
-              className="px-3 py-1 bg-yellow-500 text-white rounded disabled:bg-gray-300 text-sm"
-            >
-              Redo
-            </button>
-            <button
-              onClick={handleReset}
-              disabled={lines.length === 0}
-              className="px-3 py-1 bg-red-500 text-white rounded disabled:bg-gray-300 text-sm"
-            >
-              Reset
-            </button>
+          <div className="flex space-x-1">
+            
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={handleUndo}
+                  disabled={undoStack.length === 0}
+                  variant={"outline"}
+                  size={"icon"}
+                >
+                  <Undo/>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Undo</p>
+              </TooltipContent>
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={handleRedo}
+                  disabled={redoStack.length === 0}
+                  variant={"outline"}
+                  size={"icon"}
+                >
+                  <Redo/>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Redo</p>
+              </TooltipContent>
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={handleReset}
+                  disabled={lines.length === 0}
+                  variant={"destructive"}
+                >
+                  Reset
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Reset Garis</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
         </div>
       </div>
