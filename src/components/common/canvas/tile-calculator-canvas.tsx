@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { Redo, Undo, ZoomIn, ZoomOut } from "lucide-react";
+import { Redo, Save, Undo, ZoomIn, ZoomOut } from "lucide-react";
 import React, { useRef, useState, useEffect, useCallback } from "react";
 
 interface Point {
@@ -46,6 +46,7 @@ const TileCalculatorCanvas: React.FC<RoomCanvasProps> = ({
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const jsonFileInputRef = useRef<HTMLInputElement | null>(null);
   
   // Core drawing state
   const [lines, setLines] = useState<Line[]>([]);
@@ -70,6 +71,11 @@ const TileCalculatorCanvas: React.FC<RoomCanvasProps> = ({
   const [panOffset, setPanOffset] = useState<Point>({ x: 0, y: 0 });
   const [isPanning, setIsPanning] = useState<boolean>(false);
   const [lastPanPoint, setLastPanPoint] = useState<Point | null>(null);
+
+  // Save/Load state
+  const [isSaving, setIsSaving] = useState<boolean>(false);
+  // const [isLoading, setIsLoading] = useState<boolean>(false);
+  // const [saveSuccess, setSaveSuccess] = useState<boolean>(false);
 
   // Check if polygon is closed
   const isPolygonClosed = useCallback(() => {
@@ -523,6 +529,173 @@ const TileCalculatorCanvas: React.FC<RoomCanvasProps> = ({
     }
   },[handleRedo, handleUndo, handleReset]);
 
+  
+
+  // JSON Save/Load Functions
+  const handleSaveJSON = useCallback(() => {
+    try {
+      setIsSaving(true);
+      
+      const canvasData = {
+        version: "1.0",
+        timestamp: new Date().toISOString(),
+        lines: lines,
+        area: area,
+        perimeter: perimeter,
+        settings: {
+          isSnapping,
+          showGrid,
+          showMeasurements,
+          scale,
+          panOffset
+        },
+        tileInfo: {
+          tileWidth,
+          tileHeight,
+          tilePrice
+        },
+        metadata: {
+          totalLines: lines.length,
+          isPolygonClosed: isPolygonClosed()
+        }
+      };
+
+      const jsonString = JSON.stringify(canvasData, null, 2);
+      const blob = new Blob([jsonString], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `tile-calculator-${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      // setSaveSuccess(true);
+      // setTimeout(() => setSaveSuccess(false), 3000);
+    } catch (error) {
+      console.error('Error saving JSON:', error);
+      setError('Gagal menyimpan file JSON!');
+    } finally {
+      setIsSaving(false);
+    }
+  }, [lines, area, perimeter, isSnapping, showGrid, showMeasurements, scale, panOffset, tileWidth, tileHeight, tilePrice, isPolygonClosed]);
+
+  const handleLoadJSON = useCallback((file: File) => {
+    // setIsLoading(true);
+    setError("");
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const jsonContent = e.target?.result as string;
+        const canvasData = JSON.parse(jsonContent);
+
+        // Validate JSON structure
+        if (!canvasData.lines || !Array.isArray(canvasData.lines)) {
+          throw new Error('Format JSON tidak valid!');
+        }
+
+        // Validate line structure
+        const validLines = canvasData.lines.every((line: Line) => 
+          line.id && 
+          line.start && 
+          line.end && 
+          typeof line.start.x === 'number' && 
+          typeof line.start.y === 'number' &&
+          typeof line.end.x === 'number' && 
+          typeof line.end.y === 'number' &&
+          typeof line.length === 'number'
+        );
+
+        if (!validLines) {
+          throw new Error('Data garis dalam JSON tidak valid!');
+        }
+
+        // Reset current state
+        setUndoStack([]);
+        setRedoStack([]);
+        setStartPoint(null);
+        setMousePos(null);
+        setIsDrawing(false);
+
+        // Load lines
+        setLines(canvasData.lines);
+
+        // Load settings if available
+        if (canvasData.settings) {
+          setIsSnapping(canvasData.settings.isSnapping ?? true);
+          setShowGrid(canvasData.settings.showGrid ?? true);
+          setShowMeasurements(canvasData.settings.showMeasurements ?? true);
+          setScale(canvasData.settings.scale ?? 1);
+          setPanOffset(canvasData.settings.panOffset ?? { x: 0, y: 0 });
+        }
+
+        // Load calculated values if available
+        if (canvasData.area !== undefined) {
+          setArea(canvasData.area);
+        }
+        if (canvasData.perimeter !== undefined) {
+          setPerimeter(canvasData.perimeter);
+        }
+
+        // If polygon is closed, recalculate values to ensure accuracy
+        if (canvasData.lines.length >= 3) {
+          const polygonPoints = canvasData.lines.map((line: Line) => line.start);
+          const calculatedArea = calculateArea(polygonPoints);
+          const calculatedPerimeter = calculatePerimeter(canvasData.lines);
+          
+          setArea(calculatedArea);
+          setPerimeter(calculatedPerimeter);
+
+          // Trigger calculation callback if polygon is closed
+          if (canvasData.metadata?.isPolygonClosed) {
+            const tileAreaM2 = (tileWidth * tileHeight) / 10000;
+            const baseTiles = Math.ceil(calculatedArea / tileAreaM2);
+            const additionalTiles = Math.ceil(baseTiles * WASTE_FACTOR);
+            const totalTiles = baseTiles + additionalTiles;
+
+            onCalculate?.({
+              area: calculatedArea,
+              perimeter: calculatedPerimeter,
+              totalTiles,
+              additionalTiles,
+              costEstimate: tilePrice > 0 ? totalTiles * tilePrice : undefined
+            });
+          }
+        }
+
+        setError("");
+      } catch (error) {
+        console.error('Error loading JSON:', error);
+        setError(`Gagal memuat file JSON: ${error instanceof Error ? error.message : 'Format tidak valid'}`);
+      } finally {
+        //setIsLoading(false);
+      }
+    };
+
+    reader.onerror = () => {
+      setError('Gagal membaca file!');
+      //setIsLoading(false);
+    };
+
+    reader.readAsText(file);
+  }, [calculateArea, calculatePerimeter, tileWidth, tileHeight, tilePrice, onCalculate]);
+
+  const handleFileInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.type !== 'application/json' && !file.name.endsWith('.json')) {
+        setError('Harap pilih file JSON yang valid!');
+        return;
+      }
+      handleLoadJSON(file);
+    }
+    // Reset input value to allow selecting the same file again
+    e.target.value = '';
+  }, [handleLoadJSON]);
+
   // Calculate final results
   const tileAreaM2 = (tileWidth * tileHeight) / 10000;
   const baseTiles = Math.ceil(area / tileAreaM2);
@@ -533,7 +706,7 @@ const TileCalculatorCanvas: React.FC<RoomCanvasProps> = ({
   return (
     <div className="space-y-6 p-4 bg-gray-50 rounded-lg">
       {/* Enhanced Control Panel */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         {/* Zoom Controls */}
         <div className="space-y-2">
           <h4 className="font-semibold text-gray-700">Zoom & Pan</h4>
@@ -670,6 +843,52 @@ const TileCalculatorCanvas: React.FC<RoomCanvasProps> = ({
               </TooltipTrigger>
               <TooltipContent>
                 <p>Reset Garis</p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
+        </div>
+
+        {/* Save Action */}
+        <div className="space-y-2">
+          <h4 className="font-semibold text-gray-700">Simpan/Buka JSON</h4>
+          <div className="flex space-x-1">
+            
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={handleSaveJSON}
+                  disabled={lines.length === 0 || isSaving}
+                  variant={"outline"}
+                >
+                  <Save/>Save
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Save JSON</p>
+              </TooltipContent>
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div>
+                  <Button
+                    onClick={()=>jsonFileInputRef.current?.click()}
+                    variant={"outline"}
+                  >
+                    Open
+                  </Button>
+
+                  <input
+                    ref={jsonFileInputRef}
+                    type="file"
+                    onChange={handleFileInputChange}
+                    className="hidden"
+                    accept=".json"
+                  />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Open JSON</p>
               </TooltipContent>
             </Tooltip>
           </div>

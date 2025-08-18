@@ -29,6 +29,7 @@ const TileCalculatorPage = () => {
               <TileCalculatorCanvas
                 tileHeight={selectedProduct.specification.size.height}
                 tileWidth={selectedProduct.specification.size.width}
+                tilePrice={selectedProduct.finalPrice}
               />
             }
           </Container>
