@@ -22,6 +22,9 @@ interface GetProductParams{
   isBestSeller?:boolean,
   isNewArrivals?:boolean,
   isDiscount?:boolean,
+  options?:{
+    enabled?:boolean
+  }
 }
 
 export const useProductQuery = ({
@@ -39,7 +42,8 @@ export const useProductQuery = ({
   sort=null,
   isBestSeller=false,
   isDiscount=false,
-  isNewArrivals=false
+  isNewArrivals=false,
+  options
 }:GetProductParams)=>{
   return useQuery({
     queryKey: ["products",page,size,filters,search,sort,isBestSeller,isNewArrivals,isDiscount],
@@ -63,7 +67,8 @@ export const useProductQuery = ({
       ))
       
       return data
-    }
+    },
+    enabled: options?.enabled ?? true,
   })
 }
 
