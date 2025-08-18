@@ -72,13 +72,14 @@ export const useProductQuery = ({
   })
 }
 
-export const useSingleProductQuery = (productId:string)=>{
+export const useSingleProductQuery = (productId?:string)=>{
   return useQuery({
     queryKey: ["product",productId],
     queryFn: async ()=>{
       const {data} = await api.get<GetSingleProductResponse>(`/product/${productId}`)
 
       return data
-    }
+    },
+    enabled: !!productId
   })
 }

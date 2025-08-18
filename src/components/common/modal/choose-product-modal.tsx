@@ -12,12 +12,13 @@ import { useRef, useState } from "react"
 interface Props{
   open?:boolean
   onOpenChange?: (open: boolean) => void,
-  onSelect?: (productId: string) => void
+  onSelect?: (product:Product) => void
 }
 
 const ChooseProductModal = ({
   open = false,
-  onOpenChange
+  onOpenChange,
+  onSelect
 }:Props) => {
 
   const inputRef = useRef<HTMLInputElement>(null)
@@ -50,7 +51,8 @@ const ChooseProductModal = ({
   }
 
   const handleSelectProduct = (product: Product) => {
-    console.log("Selected product:", product.name)
+    onSelect?.(product)
+    onOpenChange?.(false)
   }
 
   return (
@@ -114,7 +116,7 @@ const ChooseProductModal = ({
           {(data && data.data.length === 0) &&
             <div className="text-center text-muted-foreground mb-4">
               <Separator className="mb-2"/>
-              Tidak ada produk yang ditemukan :(
+              Produk "{searchKeyword}" yang dicari tidak ditemukan :(
             </div>
           }
         </DialogContent>
