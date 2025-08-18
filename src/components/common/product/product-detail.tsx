@@ -10,6 +10,7 @@ import {
 import { MessageCircle, Calculator } from "lucide-react";
 import type { Product } from "@/types/product";
 import { formatCurrency, getProductImgUrl } from "@/lib/utils";
+import { Link } from "react-router";
 
 interface Props{
   product:Product
@@ -125,8 +126,10 @@ export default function ProductDetail({ product }:Props) {
 
             {/* CTA Buttons */}
             <div className="mt-8 flex gap-4 flex-wrap">
-              <Button className="flex items-center gap-2" size="lg">
-                <Calculator size={20} /> Hitung Kebutuhan
+              <Button className="flex items-center gap-2" size="lg" asChild>
+                <Link to={`/tile-calculator?product=${product._id}`}>
+                  <Calculator size={20} /> Hitung Kebutuhan
+                </Link>
               </Button>
               <Button
                 variant="secondary"

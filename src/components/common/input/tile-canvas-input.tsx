@@ -10,7 +10,11 @@ import { Separator } from "@/components/ui/separator"
 import { useSearchParams } from "@/hooks/use-search-params"
 import { useSingleProductQuery } from "@/hooks/use-product-query"
 
-const TileCanvasInput = () => {
+interface Props{
+  onSelect?: (product: Product|null) => void
+}
+
+const TileCanvasInput = ({onSelect}:Props) => {
 
   const [openChooseProductModal, setOpenChooseProductModal] = useState(false)
 
@@ -29,8 +33,12 @@ const TileCanvasInput = () => {
   useEffect(() => {
     if (data) {
       setSelectedProduct(data.data)
+      onSelect?.(data.data)
+    }else{
+      setSelectedProduct(null)
+      onSelect?.(null)
     }
-  }, [data])
+  }, [data, onSelect])
 
   return (
     <>
@@ -74,12 +82,24 @@ const TileCanvasInput = () => {
           </div>
         </div>
       :
-        <div className="border-1 border-border rounded-md" onClick={() => setOpenChooseProductModal(true)}>
-          <div className="flex flex-wrap items-center text-center justify-center px-4 py-6 cursor-pointer">
-            <p className="flex flex-wrap gap-2 items-center">
-              <Info className="size-4" /> Pilih ubin terlebih dahulu!
-            </p>
-            <Button variant={"link"}>Click untuk pilih ubin</Button>
+        <div className="flex flex-col">
+          <div 
+            className="border-1 border-double rounded-md hover:bg-accent  transition-colors" 
+            onClick={() => setOpenChooseProductModal(true)}
+          >
+            <div className="flex flex-wrap items-center text-center justify-center px-4 py-6 cursor-pointer">
+              <p className="flex flex-wrap gap-2 items-center">
+                <Info className="size-4" /> Pilih ubin terlebih dahulu!
+              </p>
+              <Button variant={"link"} className="cursor-pointer">Click untuk pilih ubin</Button>
+            </div>
+          </div>
+
+          <div className="mt-2 text-sm text-muted-foreground">
+            <ul className="list-disc pl-4">
+              <li>Pilih ubin terlebih dahulu untuk memunculkan canvas.</li>
+              <li>Anda dapat memilih lewat katalog atau tombol diatas.</li>
+            </ul>
           </div>
         </div>
       }
