@@ -12,6 +12,9 @@ import type { Product } from "@/types/product";
 import { formatCurrency, getProductImgUrl } from "@/lib/utils";
 import { Link } from "react-router";
 import { useCartStore } from "@/store/use-cart-store";
+import { toast } from "sonner";
+
+
 
 interface Props{
   product:Product
@@ -24,11 +27,20 @@ export default function ProductDetail({ product }:Props) {
   );
 
   const addToCart = useCartStore((state)=>state.addToCart)
+  const setOpenCart = useCartStore((state)=>state.setOpenCart)
 
   const handleAddToCartClick = ()=>{
     addToCart({
       id: product._id ?? "",
       quantity: 1
+    })
+
+    toast.success("Produk berhasil ditambahkan ke keranjang",{
+      action: {
+        label: "Lihat Keranjang",
+        onClick: () => setOpenCart(true)
+      },
+      position: "top-center"
     })
   }
 

@@ -2,16 +2,31 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import { useSingleProductQueries } from "@/hooks/use-product-query"
+import { capitalize } from "@/lib/string-formatter"
+import { formatCurrency, getProductImgUrl } from "@/lib/utils"
 import { useCartStore } from "@/store/use-cart-store"
 import { Barcode, MessageCircle, Minus, Plus, ShoppingCart } from "lucide-react"
 
 const CartSheet = () => {
 
+  // Cart Store State
   const totalCart = useCartStore((state)=>state.cart.length)
   const cart = useCartStore((state)=>state.cart)
+  const add = useCartStore((state)=>state.addToCart)
+  const decrementQuantity = useCartStore((state)=>state.decrementQuantity)
+
+  const openCart = useCartStore((state)=>state.openCart)
+  const setOpenCart = useCartStore((state)=>state.setOpenCart)
+
+  // Get Products from cart ids
+  const products = useSingleProductQueries(cart.map(item=>item.id))
+
+  const isLoading = products.some(product => product.isLoading)
+  const isError = products.some(product => product.isError)
 
   return (
-    <Sheet>
+    <Sheet open={openCart} onOpenChange={setOpenCart}>
 
       <SheetTrigger asChild>
         <Button variant="outline" size={"icon"} className="relative">
@@ -32,50 +47,65 @@ const CartSheet = () => {
         </SheetHeader>
 
         <div className="grid flex-1 auto-rows-min gap-6 px-4 overflow-y-auto rounded-md">
-          <ul className="rounded-md flex flex-col gap-8">
-            <li>
-              <div className="rounded-md flex gap-2 items-start text-sm">
-                <div className="w-[80px]">
-                  <Avatar className="rounded-md aspect-square w-full h-full">
-                    <AvatarImage
-                      src="https://images.unsplash.com/photo-1601758003927-2f8b0c3d1c4e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60" 
-                      alt="Product Image"
-                      className="object-cover object-center rounded-md"
-                    />
-                    <AvatarFallback className="rounded-md">U</AvatarFallback>
-                  </Avatar>
-                </div>
-                <div className="flex flex-1 flex-col gap-1">
-                  <span className="text-muted-foreground">KIA</span>
-                  <h4 className="text-base uppercase font-semibold">KIA Nama Produk</h4>
-                  <div className="flex flex-wrap gap-2 text-muted-foreground">
-                    <span>Ukuran: <span className="text-primary font-semibold">30x30cm</span></span>
-                    <span>Pengaplikasian: <span className="text-primary font-semibold">Dinding</span></span>
-                  </div>
-                  <div className="flex flex-wrap gap-2 mt-1">
-                    <Badge variant="outline">Best Seller</Badge>
-                    <Badge variant="outline">New Arrivals</Badge>
-                    <Badge variant="destructive">70% off</Badge>
-                  </div>
+          {!(isLoading || isError) &&
+            <ul className="rounded-md flex flex-col gap-8">
+              {cart.length > 0 && cart.map((item)=>{
+                const product = products.filter(p=>p.data?.data._id === item.id)[0].data
+                if(!product) return null
 
-                  <div className="flex items-start justify-between mt-6">
-                    <div className="flex flex-col gap-1">
-                      <span className="font-medium">10pcs <span className="font-normal">/ box</span></span>
-                      <div className="flex items-center gap-2">
-                        <Button variant="outline" size="icon"><Minus/></Button>
-                        <Button variant="secondary" size="icon">1</Button>
-                        <Button variant="outline" size="icon"><Plus/></Button>
+                return (
+                  <li key={item.id}>
+                    <div className="rounded-md flex gap-2 items-start text-sm">
+                      <div className="w-[80px]">
+                        <Avatar className="rounded-md aspect-square w-full h-full">
+                          <AvatarImage
+                            src={getProductImgUrl(product.data.image ?? "")}
+                            alt="Product Image"
+                            className="object-cover object-center rounded-md"
+                          />
+                          <AvatarFallback className="rounded-md">{capitalize(product.data.name[0])}</AvatarFallback>
+                        </Avatar>
+                      </div>
+                      <div className="flex flex-1 flex-col gap-1">
+                        <span className="text-muted-foreground">{product.data.brand}</span>
+                        <h4 className="text-base uppercase font-semibold">{product.data.name}</h4>
+                        <div className="flex flex-wrap gap-2 text-muted-foreground">
+                          <span>Ukuran: <span className="text-primary font-semibold">{product.data.specification.size.width}x{product.data.specification.size.height}cm</span></span>
+                          <span>Pengaplikasian: <span className="text-primary font-semibold">{product.data.specification.application.join(", ")}</span></span>
+                        </div>
+                        <div className="flex flex-wrap gap-2 mt-1">
+                          {product.data.isBestSeller && <Badge variant="outline">Best Seller</Badge>}
+                          {product.data.isNewArrivals && <Badge variant="outline">New Arrivals</Badge>}
+                          {product.data.discount && <Badge variant="destructive">{product.data.discount}% off</Badge>}
+                        </div>
+
+                        <div className="flex items-start justify-between mt-6">
+                          <div className="flex flex-col gap-1">
+                            <span className="font-medium">{product.data.tilesPerBox}pcs <span className="font-normal">/ box</span></span>
+                            <div className="flex items-center gap-2">
+                              <Button variant="outline" size="icon" onClick={()=>decrementQuantity(item.id)}><Minus/></Button>
+                              <Button variant="secondary" size="icon">{item.quantity}</Button>
+                              <Button variant="outline" size="icon" onClick={()=>add({...item,quantity:1})}><Plus/></Button>
+                            </div>
+                          </div>
+                          <div className="flex flex-col items-end">
+                            {product.data.discount &&
+                              <span className="text-base text-muted-foreground line-through">Rp{formatCurrency(product.data.price * item.quantity)}</span>
+                            }
+                            <span className="text-lg font-semibold">Rp{formatCurrency(product.data.finalPrice * item.quantity)}</span>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                    <div className="flex flex-col items-end">
-                      <span className="text-base text-muted-foreground line-through">Rp5.000,00</span>
-                      <span className="text-lg font-semibold">Rp25.000,00</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </li>
-          </ul>
+                  </li>
+                )
+              })}
+            </ul>
+          }
+
+          {isLoading && <p className="text-muted-foreground">Memuat produk...</p>}
+
+          {isError && <p className="text-destructive">Terjadi kesalahan saat memuat produk.</p>}
         </div>
 
         <SheetFooter>
