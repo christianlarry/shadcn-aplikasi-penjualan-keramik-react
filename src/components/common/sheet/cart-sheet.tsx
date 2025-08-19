@@ -2,9 +2,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import { useCart } from "@/hooks/use-cart"
 import { Barcode, MessageCircle, Minus, Plus, ShoppingCart } from "lucide-react"
 
 const CartSheet = () => {
+
+  const {cart} = useCart()
+
   return (
     <Sheet>
 
@@ -74,7 +78,7 @@ const CartSheet = () => {
         </div>
 
         <SheetFooter>
-          <Button><MessageCircle/>Pesan (Whatsapp)</Button>
+          <Button onClick={()=>console.log(cart)}><MessageCircle/>Pesan (Whatsapp)</Button>
           <Button variant="outline"><Barcode/>Lihat QRIS</Button>
           <SheetClose asChild>
             <Button variant="outline">Tutup</Button>
