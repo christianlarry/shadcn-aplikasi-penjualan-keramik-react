@@ -7,10 +7,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { MessageCircle, Calculator } from "lucide-react";
+import { MessageCircle, Calculator, ShoppingCart } from "lucide-react";
 import type { Product } from "@/types/product";
 import { formatCurrency, getProductImgUrl } from "@/lib/utils";
 import { Link } from "react-router";
+import { useCartStore } from "@/store/use-cart-store";
 
 interface Props{
   product:Product
@@ -21,6 +22,15 @@ export default function ProductDetail({ product }:Props) {
   const waMessage = encodeURIComponent(
     `Halo, saya mau tanya stok untuk produk: ${product.name}`
   );
+
+  const addToCart = useCartStore((state)=>state.addToCart)
+
+  const handleAddToCartClick = ()=>{
+    addToCart({
+      id: product._id ?? "",
+      quantity: 1
+    })
+  }
 
   return (
     <>
@@ -130,13 +140,11 @@ export default function ProductDetail({ product }:Props) {
 
             {/* CTA Buttons */}
             <div className="mt-8 flex gap-4 flex-wrap">
-              <Button className="flex items-center gap-2" size="lg" asChild>
-                <Link to={`/tile-calculator?product=${product._id}`}>
-                  <Calculator size={20} /> Hitung Kebutuhan
-                </Link>
+              <Button onClick={handleAddToCartClick} variant="outline" className="flex items-center gap-2" size="lg">
+                <ShoppingCart size={20} /> Tambah ke Keranjang
               </Button>
               <Button
-                variant="secondary"
+                variant="outline"
                 className="flex items-center gap-2"
                 size="lg"
                 onClick={() =>
@@ -144,6 +152,11 @@ export default function ProductDetail({ product }:Props) {
                 }
               >
                 <MessageCircle size={20} /> Tanya Stok
+              </Button>
+              <Button className="flex items-center gap-2" size="lg" asChild>
+                <Link to={`/tile-calculator?product=${product._id}`}>
+                  <Calculator size={20} /> Hitung Kebutuhan
+                </Link>
               </Button>
             </div>
           </div>

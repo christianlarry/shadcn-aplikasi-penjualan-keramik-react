@@ -2,12 +2,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { useCart } from "@/hooks/use-cart"
+import { useCartStore } from "@/store/use-cart-store"
 import { Barcode, MessageCircle, Minus, Plus, ShoppingCart } from "lucide-react"
 
 const CartSheet = () => {
 
-  const {cart} = useCart()
+  const totalCart = useCartStore((state)=>state.cart.length)
+  const cart = useCartStore((state)=>state.cart)
 
   return (
     <Sheet>
@@ -17,14 +18,14 @@ const CartSheet = () => {
           <ShoppingCart/>
           <Badge 
             className="absolute -top-2 -right-2 min-w-5 h-5 px-1 rounded-full tabular-nums" variant="destructive">
-            50
+            {totalCart}
           </Badge>
         </Button>
       </SheetTrigger>
 
       <SheetContent className="rounded-s-md sm:max-w-[450px]">
         <SheetHeader>
-          <SheetTitle>Keranjang Belanja | <span className="text-muted-foreground font-normal">50 item</span></SheetTitle>
+          <SheetTitle>Keranjang Belanja | <span className="text-muted-foreground font-normal">{totalCart} item</span></SheetTitle>
           <SheetDescription>
             Lihat produk yang telah Anda pilih untuk dibeli. Untuk pembelian dilakukan melalui WhatsApp.
           </SheetDescription>
