@@ -71,6 +71,10 @@ export default function ProductDetail({ product }:Props) {
                 <span className="text-3xl font-bold text-primary">
                   Rp{formatCurrency(product.finalPrice)}
                 </span>
+
+                <span className="font-medium">
+                  ({product.tilesPerBox}pcs / box)
+                </span>
               </div>
               {product.discount && (
                 <Badge variant="destructive" className="mt-2">

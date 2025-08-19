@@ -19,6 +19,7 @@ export interface Product{
   }
   brand: string,
   price: number,
+  tilesPerBox: number,
   finalPrice: number,
   discount?:number,
   isBestSeller?:boolean,

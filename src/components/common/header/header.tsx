@@ -5,6 +5,7 @@ import Navbar from "../navbar/navbar"
 import { Button } from "@/components/ui/button"
 import { Map, User } from "lucide-react"
 import { EXTERNAL_LINKS } from "@/constants/links.strings"
+import CartSheet from "../sheet/cart-sheet"
 
 const DASHBOARD_BASE_URL = import.meta.env.VITE_DASHBOARD_BASE_URL || "/"
 
@@ -23,6 +24,7 @@ const Header = () => {
           <Navbar />
 
           <div className="flex gap-2">
+            <CartSheet/>
             <Button variant="outline" asChild>
               <Link to={DASHBOARD_BASE_URL}>
                 <User /> Sign In
