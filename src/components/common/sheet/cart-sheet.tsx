@@ -1,12 +1,15 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { Separator } from "@/components/ui/separator"
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { useSingleProductQueries } from "@/hooks/use-product-query"
 import { capitalize } from "@/lib/string-formatter"
 import { formatCurrency, getProductImgUrl } from "@/lib/utils"
 import { useCartStore } from "@/store/use-cart-store"
-import { Barcode, MessageCircle, Minus, Plus, ShoppingCart } from "lucide-react"
+import { Barcode, Link2, MessageCircle, Minus, Plus, ShoppingCart } from "lucide-react"
+import { Link } from "react-router"
+import ConfirmationResetCartDialog from "../dialog/confirmation-reset-cart-dialog"
 
 const CartSheet = () => {
 
@@ -38,7 +41,7 @@ const CartSheet = () => {
         </Button>
       </SheetTrigger>
 
-      <SheetContent className="rounded-s-md sm:max-w-[450px]">
+      <SheetContent className="rounded-s-md w-full sm:max-w-[450px]">
         <SheetHeader>
           <SheetTitle>Keranjang Belanja | <span className="text-muted-foreground font-normal">{totalCart} item</span></SheetTitle>
           <SheetDescription>
@@ -49,7 +52,7 @@ const CartSheet = () => {
         <div className="grid flex-1 auto-rows-min gap-6 px-4 overflow-y-auto rounded-md">
           {!(isLoading || isError) &&
             <ul className="rounded-md flex flex-col gap-8">
-              {cart.length > 0 && cart.map((item)=>{
+              {cart.length > 0 && cart.map((item,idx)=>{
                 const product = products.filter(p=>p.data?.data._id === item.id)[0].data
                 if(!product) return null
 
@@ -71,7 +74,7 @@ const CartSheet = () => {
                         <h4 className="text-base uppercase font-semibold">{product.data.name}</h4>
                         <div className="flex flex-wrap gap-2 text-muted-foreground">
                           <span>Ukuran: <span className="text-primary font-semibold">{product.data.specification.size.width}x{product.data.specification.size.height}cm</span></span>
-                          <span>Pengaplikasian: <span className="text-primary font-semibold">{product.data.specification.application.join(", ")}</span></span>
+                          <span>Penggunaan: <span className="text-primary font-semibold">{product.data.specification.application.join(", ")}</span></span>
                         </div>
                         <div className="flex flex-wrap gap-2 mt-1">
                           {product.data.isBestSeller && <Badge variant="outline">Best Seller</Badge>}
@@ -79,7 +82,7 @@ const CartSheet = () => {
                           {product.data.discount && <Badge variant="destructive">{product.data.discount}% off</Badge>}
                         </div>
 
-                        <div className="flex items-start justify-between mt-6">
+                        <div className="flex flex-wrap gap-4 items-start justify-between mt-6">
                           <div className="flex flex-col gap-1">
                             <span className="font-medium">{product.data.tilesPerBox}pcs <span className="font-normal">/ box</span></span>
                             <div className="flex items-center gap-2">
@@ -97,9 +100,22 @@ const CartSheet = () => {
                         </div>
                       </div>
                     </div>
+
+                    {(idx != cart.length-1) && <Separator className="mt-8"/>}
                   </li>
                 )
               })}
+
+              {cart.length === 0 &&
+                <div className="flex flex-col items-center">
+                  <p className="text-muted-foreground text-center">Keranjang Anda kosong.</p>
+                  <Button variant="link" className="p-0 size-auto" asChild>
+                    <Link to="/catalog/all-products" onClick={()=>setOpenCart(false)}>
+                      <Link2/>Klik untuk belanja
+                    </Link>
+                  </Button>
+                </div>
+              }
             </ul>
           }
 
@@ -108,12 +124,30 @@ const CartSheet = () => {
           {isError && <p className="text-destructive">Terjadi kesalahan saat memuat produk.</p>}
         </div>
 
-        <SheetFooter>
-          <Button onClick={()=>console.log(cart)}><MessageCircle/>Pesan (Whatsapp)</Button>
-          <Button variant="outline"><Barcode/>Lihat QRIS</Button>
-          <SheetClose asChild>
-            <Button variant="outline">Tutup</Button>
-          </SheetClose>
+        <SheetFooter className="pt-0">
+          <div className="flex items-center justify-between gap-4">
+            <ConfirmationResetCartDialog/>
+            <div className="flex items-center justify-end gap-2">
+              <span>Total:</span>
+              {products.length > 0 && 
+                <span className="text-lg font-semibold">Rp{formatCurrency(cart.reduce((total, item) => {
+                  const product = products.filter(p=>p.data?.data._id === item.id)[0]?.data
+                  if(!product) return total
+                  return total + (product ? product.data.finalPrice * item.quantity : 0)
+                }, 0))}</span>
+              }
+            </div>
+          </div>
+
+          <Separator className="my-2"/>
+
+          <div className="flex flex-col gap-2">
+            <Button onClick={()=>console.log(cart)}><MessageCircle/>Pesan (Whatsapp)</Button>
+            <Button variant="outline"><Barcode/>Lihat QRIS</Button>
+            <SheetClose asChild>
+              <Button variant="outline">Tutup</Button>
+            </SheetClose>
+          </div>
         </SheetFooter>
       </SheetContent>
     </Sheet>

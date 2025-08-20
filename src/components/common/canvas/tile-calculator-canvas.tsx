@@ -28,6 +28,7 @@ interface RoomCanvasProps {
     costEstimate?: number;
   }) => void;
   tilePrice?: number;
+  tilesPerBox: number;
 }
 
 // Configuration constants
@@ -42,7 +43,8 @@ const TileCalculatorCanvas: React.FC<RoomCanvasProps> = ({
   tileWidth,
   tileHeight,
   onCalculate,
-  tilePrice = 0
+  tilePrice = 0,
+  tilesPerBox
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -701,7 +703,8 @@ const TileCalculatorCanvas: React.FC<RoomCanvasProps> = ({
   const baseTiles = Math.ceil(area / tileAreaM2);
   const additionalTiles = Math.ceil(baseTiles * WASTE_FACTOR);
   const totalTiles = baseTiles + additionalTiles;
-  const costEstimate = tilePrice > 0 ? totalTiles * tilePrice : 0;
+  const totalBox = Math.ceil(totalTiles / tilesPerBox);
+  const costEstimate = tilePrice > 0 ? (totalTiles/tilesPerBox) * tilePrice : 0;
 
   return (
     <div className="space-y-6 p-4 bg-gray-50 rounded-lg">
@@ -967,9 +970,12 @@ const TileCalculatorCanvas: React.FC<RoomCanvasProps> = ({
             
             <div className="bg-white p-4 rounded-lg shadow">
               <h4 className="font-semibold text-gray-700">Kebutuhan Keramik</h4>
-              <p className="text-2xl font-bold text-green-600">{totalTiles} keping</p>
+              <p className="text-2xl font-bold text-green-600">{totalTiles} keping | {totalBox} box</p>
               <p className="text-sm text-gray-500">
                 Dasar: {baseTiles} + Cadangan: {additionalTiles}
+              </p>
+              <p className="text-sm text-gray-500">
+                @ Isi per box {tilesPerBox}pcs
               </p>
             </div>
             
@@ -980,7 +986,7 @@ const TileCalculatorCanvas: React.FC<RoomCanvasProps> = ({
                   Rp {costEstimate.toLocaleString('id-ID')}
                 </p>
                 <p className="text-sm text-gray-500">
-                  @ Rp {tilePrice.toLocaleString('id-ID')} per keping
+                  @ Rp {tilePrice.toLocaleString('id-ID')} per box
                 </p>
               </div>
             )}

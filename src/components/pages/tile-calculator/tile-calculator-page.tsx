@@ -30,6 +30,7 @@ const TileCalculatorPage = () => {
                 tileHeight={selectedProduct.specification.size.height}
                 tileWidth={selectedProduct.specification.size.width}
                 tilePrice={selectedProduct.finalPrice}
+                tilesPerBox={selectedProduct.tilesPerBox}
               />
             }
           </Container>

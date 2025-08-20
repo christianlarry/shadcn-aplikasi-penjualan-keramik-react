@@ -7,12 +7,10 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { MessageCircle, Calculator, ShoppingCart } from "lucide-react";
+import { MessageCircle, Calculator } from "lucide-react";
 import type { Product } from "@/types/product";
 import { formatCurrency, getProductImgUrl } from "@/lib/utils";
 import { Link } from "react-router";
-import { useCartStore } from "@/store/use-cart-store";
-import { toast } from "sonner";
 
 
 
@@ -20,29 +18,14 @@ interface Props{
   product:Product
 }
 
+import { INFORMASI_TOKO } from "@/constants/informasiToko";
+import SaveProductButton from "../button/save-product-button";
+
 export default function ProductDetail({ product }:Props) {
-  const waNumber = "6281355594856"; // ganti nomor WA toko
+; // ganti nomor WA toko
   const waMessage = encodeURIComponent(
     `Halo, saya mau tanya stok untuk produk: ${product.name}`
   );
-
-  const addToCart = useCartStore((state)=>state.addToCart)
-  const setOpenCart = useCartStore((state)=>state.setOpenCart)
-
-  const handleAddToCartClick = ()=>{
-    addToCart({
-      id: product._id ?? "",
-      quantity: 1
-    })
-
-    toast.success("Produk berhasil ditambahkan ke keranjang",{
-      action: {
-        label: "Lihat Keranjang",
-        onClick: () => setOpenCart(true)
-      },
-      position: "top-center"
-    })
-  }
 
   return (
     <>
@@ -152,15 +135,13 @@ export default function ProductDetail({ product }:Props) {
 
             {/* CTA Buttons */}
             <div className="mt-8 flex gap-4 flex-wrap">
-              <Button onClick={handleAddToCartClick} variant="outline" className="flex items-center gap-2" size="lg">
-                <ShoppingCart size={20} /> Tambah ke Keranjang
-              </Button>
+              <SaveProductButton productId={product._id ?? ""}/>
               <Button
                 variant="outline"
                 className="flex items-center gap-2"
                 size="lg"
                 onClick={() =>
-                  window.open(`https://wa.me/${waNumber}?text=${waMessage}`, "_blank")
+                  window.open(`https://wa.me/${INFORMASI_TOKO.NO_WA}?text=${waMessage}`, "_blank")
                 }
               >
                 <MessageCircle size={20} /> Tanya Stok
