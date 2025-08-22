@@ -6,10 +6,10 @@ import { Label } from "@/components/ui/label"
 import { INFORMASI_TOKO } from "@/constants/informasiToko"
 import { formatCurrency } from "@/lib/utils"
 import { useCartStore } from "@/store/use-cart-store"
+import { useOrderStore } from "@/store/use-order-store"
 import type { GetSingleProductResponse} from "@/types/product"
 import { DialogClose } from "@radix-ui/react-dialog"
 import { Info, MessageCircle } from "lucide-react"
-import { useState } from "react"
 
 interface Props{
   productQueryResult:(GetSingleProductResponse | undefined)[]
@@ -18,10 +18,8 @@ interface Props{
 const OrderModal = ({productQueryResult}:Props) => {
 
   const cart = useCartStore((state)=>state.cart)
-
-  // State
-  const [namaLengkap,setNamaLengkap] = useState<string>("")
-  const [alamat,setAlamat] = useState<string>("")
+  const user = useOrderStore((state)=>state.user)
+  const setUser = useOrderStore((state)=>state.setUser)
 
   const handleTriggerClick = (e:React.MouseEvent<HTMLButtonElement>)=>{
     // Batalkan open modal jika cart kosong
@@ -39,8 +37,8 @@ const OrderModal = ({productQueryResult}:Props) => {
     const WA_MESSAGE = `
 *Pesanan Baru dari Website Toko Keramik*
 
-Nama: ${namaLengkap}
-Alamat: ${alamat}
+Nama: ${user.namaLengkap}
+Alamat: ${user.alamat}
 
 Detail Pesanan:
 ${productInCart.map(p=>`${p.name} ${p.specification.size.width}x${p.specification.size.height}cm (x${p.quantity}) = Rp${formatCurrency(p.finalPrice*p.quantity)}`).join(`\n`)}
@@ -49,8 +47,7 @@ Total: Rp${formatCurrency(productInCart.reduce((total,p)=>{
   return total+p.finalPrice*p.quantity
 },0))}
 
-Terima kasih
-    `
+Terima kasih`
 
     window.open(`https://wa.me/${INFORMASI_TOKO.NO_WA}?text=${encodeURIComponent(WA_MESSAGE)}`, "_blank")
   }
@@ -74,8 +71,8 @@ Terima kasih
               type="text" 
               id="namaLengkap" 
               placeholder="Cth: Christian Rondonuwu"
-              value={namaLengkap}
-              onChange={(e)=>setNamaLengkap(e.target.value)}
+              value={user.namaLengkap}
+              onChange={(e)=>setUser({...user,namaLengkap:e.target.value})}
               />
           </div>
           <div className="grid w-full max-w-sm items-center gap-3">
@@ -84,8 +81,8 @@ Terima kasih
               type="text" 
               id="alamat" 
               placeholder="Alamat pengantaran"
-              value={alamat}
-              onChange={(e)=>setAlamat(e.target.value)}
+              value={user.alamat}
+              onChange={(e)=>setUser({...user,alamat:e.target.value})}
               />
           </div>
 
