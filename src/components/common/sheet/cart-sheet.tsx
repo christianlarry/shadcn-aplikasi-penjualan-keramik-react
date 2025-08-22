@@ -7,9 +7,11 @@ import { useSingleProductQueries } from "@/hooks/use-product-query"
 import { capitalize } from "@/lib/string-formatter"
 import { formatCurrency, getProductImgUrl } from "@/lib/utils"
 import { useCartStore } from "@/store/use-cart-store"
-import { Barcode, Link2, MessageCircle, Minus, Plus, ShoppingCart } from "lucide-react"
+import { Link2, Minus, Plus, ShoppingCart } from "lucide-react"
 import { Link } from "react-router"
 import ConfirmationResetCartDialog from "../dialog/confirmation-reset-cart-dialog"
+import OrderModal from "../modal/order-modal"
+import QrisModal from "../modal/qris-modal"
 
 const CartSheet = () => {
 
@@ -125,25 +127,27 @@ const CartSheet = () => {
         </div>
 
         <SheetFooter className="pt-0">
-          <div className="flex items-center justify-between gap-4">
-            <ConfirmationResetCartDialog/>
-            <div className="flex items-center justify-end gap-2">
-              <span>Total:</span>
-              {products.length > 0 && 
-                <span className="text-lg font-semibold">Rp{formatCurrency(cart.reduce((total, item) => {
-                  const product = products.filter(p=>p.data?.data._id === item.id)[0]?.data
-                  if(!product) return total
-                  return total + (product ? product.data.finalPrice * item.quantity : 0)
-                }, 0))}</span>
-              }
+          {cart.length > 0 &&
+            <div className="flex items-center justify-between gap-4">
+              <ConfirmationResetCartDialog/>
+              <div className="flex items-center justify-end gap-2">
+                <span>Total:</span>
+                {products.length > 0 && 
+                  <span className="text-lg font-semibold">Rp{formatCurrency(cart.reduce((total, item) => {
+                    const product = products.filter(p=>p.data?.data._id === item.id)[0]?.data
+                    if(!product) return total
+                    return total + (product ? product.data.finalPrice * item.quantity : 0)
+                  }, 0))}</span>
+                }
+              </div>
             </div>
-          </div>
+          }
 
           <Separator className="my-2"/>
 
           <div className="flex flex-col gap-2">
-            <Button onClick={()=>console.log(cart)}><MessageCircle/>Pesan (Whatsapp)</Button>
-            <Button variant="outline"><Barcode/>Lihat QRIS</Button>
+            <OrderModal productQueryResult={products.map(p=>p.data)}/>
+            <QrisModal/>
             <SheetClose asChild>
               <Button variant="outline">Tutup</Button>
             </SheetClose>
