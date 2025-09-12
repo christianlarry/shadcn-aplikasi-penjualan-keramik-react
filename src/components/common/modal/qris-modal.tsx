@@ -4,7 +4,7 @@ import { DialogClose } from "@radix-ui/react-dialog"
 import { Barcode } from "lucide-react"
 
 // CONSTANTS QRIS URL
-const QRIS_IMAGE_URL = "https://cdn.rri.co.id/berita/Bogor/o/1728876328121-qr_code/2p50py7051uxv4j.jpeg"
+const QRIS_IMAGE_URL = import.meta.env.VITE_QRIS_IMAGE_URL
 
 const QrisModal = () => {
 
