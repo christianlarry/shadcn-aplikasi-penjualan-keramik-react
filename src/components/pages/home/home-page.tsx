@@ -12,6 +12,7 @@ import { Link } from "react-router"
 import Logo from "@/components/common/logo/logo"
 import { EXTERNAL_LINKS } from "@/constants/links.strings"
 import { useProductQuery } from "@/hooks/use-product-query"
+import { EmptyProduct } from "@/components/common/empty/EmptyProduct"
 
 const HomePage = () => {
 
@@ -154,6 +155,10 @@ const HomePage = () => {
               products={data.data}
               onSelect={handleProductSliderSelect}
             />
+          }
+
+          {!data && 
+            <EmptyProduct/>
           }
 
         </section>

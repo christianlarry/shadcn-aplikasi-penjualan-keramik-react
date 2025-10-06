@@ -9,6 +9,7 @@ import { useLocation } from "react-router"
 import { useCatalog } from "@/contexts/catalog-context"
 import { Button } from "@/components/ui/button"
 import { useSearchParams } from "@/hooks/use-search-params"
+import { EmptyProduct } from "../empty/EmptyProduct"
 
 const PAGINATION_LIMIT = 9
 
@@ -79,6 +80,12 @@ const Catalog = ({
             {(data && data.data.length < 1) &&
               <div className="flex items-center justify-center col-span-3">
                 <Button className="text-center" variant={"outline"}>Produk tidak ada:(</Button>
+              </div>
+            }
+
+            {!data &&
+              <div className="col-span-3">
+                <EmptyProduct/>
               </div>
             }
           </div>
