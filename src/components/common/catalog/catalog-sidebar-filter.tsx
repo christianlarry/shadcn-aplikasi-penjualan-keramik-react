@@ -62,6 +62,10 @@ const CatalogSidebarFilter = () => {
           {idx < FILTER_OPTIONS_CONFIG.length-1 && <Separator/>}
         </Fragment>
       ))}
+
+      {!data &&
+        <div className="text-sm text-muted-foreground">Tidak ada opsi filter yang tersedia. Coba lagi nanti</div>
+      }
     </div>
   )
 }
