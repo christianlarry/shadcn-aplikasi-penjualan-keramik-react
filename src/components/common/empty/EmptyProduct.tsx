@@ -10,7 +10,7 @@ import {
 import { CircleX } from "lucide-react"
 export function EmptyProduct() {
   return (
-    <Empty className="border">
+    <Empty className="border border-border">
       <EmptyHeader>
         <EmptyMedia variant={"icon"}>
           <CircleX/>
