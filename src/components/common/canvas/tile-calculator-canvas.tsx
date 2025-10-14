@@ -704,7 +704,7 @@ const TileCalculatorCanvas: React.FC<RoomCanvasProps> = ({
   const additionalTiles = Math.ceil(baseTiles * WASTE_FACTOR);
   const totalTiles = baseTiles + additionalTiles;
   const totalBox = Math.ceil(totalTiles / tilesPerBox);
-  const costEstimate = tilePrice > 0 ? (totalTiles/tilesPerBox) * tilePrice : 0;
+  const costEstimate = tilePrice > 0 ? totalBox * tilePrice : 0;
 
   return (
     <div className="space-y-6 p-4 bg-gray-50 rounded-lg">
