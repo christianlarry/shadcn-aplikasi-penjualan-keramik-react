@@ -147,7 +147,7 @@ const CartSheet = () => {
 
           <div className="flex flex-col gap-2">
             <OrderModal productQueryResult={products.map(p=>p.data)}/>
-            <QrisModal/>
+            {/* <QrisModal/> */}
             <SheetClose asChild>
               <Button variant="outline">Tutup</Button>
             </SheetClose>
