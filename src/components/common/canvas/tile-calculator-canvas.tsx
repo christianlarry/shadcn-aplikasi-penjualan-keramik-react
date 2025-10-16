@@ -289,19 +289,25 @@ const TileCalculatorCanvas: React.FC<RoomCanvasProps> = ({
     }
   }, [draw]);
 
-  // Enhanced area calculation with better precision
+  // Kalkulasi luas poligon
   const calculateArea = useCallback((points: Point[]): number => {
+    // Jika titik kurang dari 3, bukan poligon => luas 0
     if (points.length < 3) return 0;
     
+    // Gunakan rumus polygon area (shoelace formula)
     let area = 0;
     const n = points.length;
     
     for (let i = 0; i < n; i++) {
-      const j = (i + 1) % n;
+      const j = (i + 1) % n; // indeks titik berikutnya (wrap-around)
+      // penjumlahan silang x_i * y_{i+1}
       area += points[i].x * points[j].y;
+      // pengurangan silang x_{i+1} * y_i
       area -= points[j].x * points[i].y;
     }
     
+    // hasil shoelace dibagi 2 dan ambil nilai absolut
+    // kemudian ubah dari pixel^2 ke meter^2 dengan membagi GRID_SIZE^2
     return Math.abs(area / 2) / (GRID_SIZE * GRID_SIZE);
   }, []);
 
