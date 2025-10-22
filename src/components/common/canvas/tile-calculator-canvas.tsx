@@ -295,7 +295,7 @@ const TileCalculatorCanvas: React.FC<RoomCanvasProps> = ({
     if (points.length < 3) return 0;
     
     // Gunakan rumus polygon area (shoelace formula)
-    // Rumus matematika-nya adalah: Area = ½ | (x₁y₂ + x₂y₃ + ... + xₙy₁) - (y₁x₂ + y₂x₃ + ... + yₙx₁) |
+    // Rumus matematika-nya adalah: Area = ½ * (x₁y₂ + x₂y₃ + ... + xₙy₁) - (y₁x₂ + y₂x₃ + ... + yₙx₁) |
     let area = 0;
     const n = points.length;
     
@@ -305,7 +305,12 @@ const TileCalculatorCanvas: React.FC<RoomCanvasProps> = ({
       area += points[i].x * points[j].y;
       // pengurangan silang x_{i+1} * y_i
       area -= points[j].x * points[i].y;
+
+      console.log("Area step ", i, ": ", area);
     }
+
+    console.log("Calculated raw area (shoelace result): ", area);
+    console.log("Points: ", points);
     
     // hasil shoelace dibagi 2 dan ambil nilai absolut
     // kemudian ubah dari pixel^2 ke meter^2 dengan membagi GRID_SIZE^2
