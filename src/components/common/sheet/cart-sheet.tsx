@@ -11,7 +11,6 @@ import { Link2, Minus, Plus, ShoppingCart } from "lucide-react"
 import { Link } from "react-router"
 import ConfirmationResetCartDialog from "../dialog/confirmation-reset-cart-dialog"
 import OrderModal from "../modal/order-modal"
-import QrisModal from "../modal/qris-modal"
 
 const CartSheet = () => {
 
