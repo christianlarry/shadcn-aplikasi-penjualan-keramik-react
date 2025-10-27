@@ -77,17 +77,17 @@ const HomePage = () => {
               <p className="text-center">Temukan berbagai pilihan ubin keramik berkualitas tinggi untuk mempercantik rumah dan bangunan Anda. CV Aneka Keramik siap memenuhi kebutuhan interior dan eksterior Anda.</p>
 
               <div className="mt-4 flex flex-wrap gap-2 justify-center">
-                <Button variant="outline" asChild>
+                <Button asChild>
                   <Link to="/catalog/all-products">
                     <ShoppingCart/>Katalog
                   </Link>
                 </Button>
-                <Button variant="outline" asChild>
+                <Button asChild>
                   <Link to="/tile-calculator">
                     <Calculator/>Kalkulator Ubin
                   </Link>
                 </Button>
-                <Button asChild>
+                <Button variant="outline" asChild>
                   <a href={EXTERNAL_LINKS.gmapsLocation} target="_blank">
                     <Map/>Find Shop
                   </a>
