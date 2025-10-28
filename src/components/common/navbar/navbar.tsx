@@ -1,5 +1,5 @@
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger, navigationMenuTriggerStyle } from "@/components/ui/navigation-menu"
-import { KATALOG_NAV_ITEMS } from "@/constants/navigation";
+import { KATALOG_NAV_ITEMS } from "@/constants/header";
 import type { IconType } from "react-icons";
 import { Link } from "react-router"
 

@@ -1,3 +1,0 @@
-export const INFORMASI_TOKO = {
-  NO_WA: "6281355594856"
-}

@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/ui"
 
 interface Props extends React.HTMLAttributes<HTMLDivElement>{
   title:string,

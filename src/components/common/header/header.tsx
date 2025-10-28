@@ -4,8 +4,8 @@ import Logo from "../logo/logo"
 import Navbar from "../navbar/navbar"
 import { Button } from "@/components/ui/button"
 import { Map, User } from "lucide-react"
-import { EXTERNAL_LINKS } from "@/constants/links.strings"
-import CartSheet from "../sheet/cart-sheet"
+import CartSheet from "../../../features/order/components/cart-sheet"
+import { INFORMASI_TOKO } from "@/constants/informasi-toko"
 
 const DASHBOARD_BASE_URL = import.meta.env.VITE_DASHBOARD_BASE_URL || "/"
 
@@ -31,7 +31,7 @@ const Header = () => {
               </Link>
             </Button>
             <Button asChild>
-              <a href={EXTERNAL_LINKS.gmapsLocation} target="_blank">
+              <a href={INFORMASI_TOKO.MAP_LOCATION_URL} target="_blank">
                 <Map /> Find Shop
               </a>
             </Button>
