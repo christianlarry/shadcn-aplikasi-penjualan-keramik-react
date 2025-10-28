@@ -5,6 +5,7 @@ import { createBrowserRouter, Navigate, RouterProvider } from 'react-router';
 import { paths } from '@/config/paths'; // Import objek paths
 import MainLayout from '@/components/layouts/main-layout'; // Import MainLayout
 import ErrorPage from '@/pages/error-page'; // Import ErrorPage
+import { LoadingScreen } from '@/components/common/screen/loading-screen';
 
 // Fungsi helper untuk lazy loading komponen dan mengintegrasikan clientLoader/clientAction
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -23,6 +24,7 @@ const createAppRouter = (queryClient: QueryClient) =>
     {
       path: paths.home.path, // Path dasar aplikasi, yaitu '/'
       errorElement: <ErrorPage />, // Tampilkan ErrorPage jika ada error di rute ini atau turunannya
+      hydrateFallbackElement: <LoadingScreen/>, // Tampilkan LoadingScreen saat melakukan hidrasi
       children: [
         {
           element: <MainLayout />, // Gunakan MainLayout sebagai wrapper untuk rute-rute utama
@@ -104,6 +106,7 @@ const createAppRouter = (queryClient: QueryClient) =>
     {
       path: '*', // Rute catch-all untuk halaman yang tidak ditemukan (404)
       lazy: () => import('@/pages/error-page').then(convert(queryClient)),
+      hydrateFallbackElement: <LoadingScreen />
     },
   ]);
 
