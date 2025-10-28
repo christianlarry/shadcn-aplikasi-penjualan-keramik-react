@@ -4,7 +4,7 @@ import { useEffect } from "react"
 import { createPortal } from "react-dom"
 import { useRouteError, isRouteErrorResponse, Link } from "react-router"
 
-const ErrorPage = () => {
+const ErrorScreen = () => {
   const error = useRouteError()
 
   useEffect(() => {
@@ -55,4 +55,4 @@ const ErrorPage = () => {
   )
 }
 
-export default ErrorPage
+export default ErrorScreen

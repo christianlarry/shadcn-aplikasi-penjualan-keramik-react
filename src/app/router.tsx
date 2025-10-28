@@ -4,8 +4,9 @@ import { createBrowserRouter, Navigate, RouterProvider } from 'react-router';
 
 import { paths } from '@/config/paths'; // Import objek paths
 import MainLayout from '@/components/layouts/main-layout'; // Import MainLayout
-import ErrorPage from '@/pages/error-page'; // Import ErrorPage
 import { LoadingScreen } from '@/components/common/screen/loading-screen';
+import ErrorScreen from '@/components/common/screen/error-screen';
+import NotFoundRoute from './routes/not-found';
 
 // Fungsi helper untuk lazy loading komponen dan mengintegrasikan clientLoader/clientAction
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -23,7 +24,7 @@ const createAppRouter = (queryClient: QueryClient) =>
   createBrowserRouter([
     {
       path: paths.home.path, // Path dasar aplikasi, yaitu '/'
-      errorElement: <ErrorPage />, // Tampilkan ErrorPage jika ada error di rute ini atau turunannya
+      errorElement: <ErrorScreen />, // Tampilkan ErrorPage jika ada error di rute ini atau turunannya
       hydrateFallbackElement: <LoadingScreen/>, // Tampilkan LoadingScreen saat melakukan hidrasi
       children: [
         {
@@ -31,7 +32,7 @@ const createAppRouter = (queryClient: QueryClient) =>
           children: [
             {
               index: true, // Rute default untuk path '/', akan menampilkan HomePage
-              lazy: () => import('@/pages/home-page').then(convert(queryClient)),
+              lazy: () => import('@/app/routes/home').then(convert(queryClient)),
             },
             {
               // Rute untuk '/catalog', akan me-redirect ke '/catalog/all-products'
@@ -42,7 +43,7 @@ const createAppRouter = (queryClient: QueryClient) =>
               // Rute untuk '/catalog/all-products'
               path: paths.catalog.allProducts.path, // Ambil 'catalog/all-products'
               lazy: () =>
-                import('@/features/catalog/pages/all-product-page').then(
+                import('@/app/routes/catalog/all-products').then(
                   convert(queryClient),
                 ),
             },
@@ -50,7 +51,7 @@ const createAppRouter = (queryClient: QueryClient) =>
               // Rute untuk '/catalog/best-seller'
               path: paths.catalog.bestSeller.path, // Ambil 'catalog/best-seller'
               lazy: () =>
-                import('@/features/catalog/pages/best-seller-page').then(
+                import('@/app/routes/catalog/best-seller').then(
                   convert(queryClient),
                 ),
             },
@@ -58,7 +59,7 @@ const createAppRouter = (queryClient: QueryClient) =>
               // Rute untuk '/catalog/new-arrivals'
               path: paths.catalog.newArrivals.path, // Ambil 'catalog/new-arrivals'
               lazy: () =>
-                import('@/features/catalog/pages/new-arrivals-page').then(
+                import('@/app/routes/catalog/new-arrivals').then(
                   convert(queryClient),
                 ),
             },
@@ -66,7 +67,7 @@ const createAppRouter = (queryClient: QueryClient) =>
               // Rute untuk '/catalog/discount'
               path: paths.catalog.discount.path, // Ambil 'catalog/discount'
               lazy: () =>
-                import('@/features/catalog/pages/discount-page').then(
+                import('@/app/routes/catalog/discount').then(
                   convert(queryClient),
                 ),
             },
@@ -74,7 +75,7 @@ const createAppRouter = (queryClient: QueryClient) =>
               // Rute untuk '/catalog/product/:id'
               path: paths.catalog.productDetail.path, // Ambil 'catalog/product/:id'
               lazy: () =>
-                import('@/features/catalog/pages/product-detail-page').then(
+                import('@/app/routes/catalog/product-detail').then(
                   convert(queryClient),
                 ),
             },
@@ -84,7 +85,7 @@ const createAppRouter = (queryClient: QueryClient) =>
           // Rute untuk '/tile-calculator'
           path: paths.tileCalculator.path, // Ambil 'tile-calculator'
           lazy: () =>
-            import('@/features/tile-calculator/pages/tile-calculator-page').then(
+            import('@/app/routes/tile-calculator/tile-calculator').then(
               convert(queryClient),
             ),
         },
@@ -105,8 +106,7 @@ const createAppRouter = (queryClient: QueryClient) =>
     },
     {
       path: '*', // Rute catch-all untuk halaman yang tidak ditemukan (404)
-      lazy: () => import('@/pages/error-page').then(convert(queryClient)),
-      hydrateFallbackElement: <LoadingScreen />
+      element: <NotFoundRoute />, // Tampilkan ErrorPage jika halaman tidak ditemukan
     },
   ]);
 
