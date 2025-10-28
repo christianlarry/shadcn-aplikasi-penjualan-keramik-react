@@ -3,6 +3,7 @@ import BreadcrumbsSection from "@/components/common/sections/breadcrumbs-section
 import { useSingleProductQuery } from "@/features/catalog/hooks/use-product-query"
 import { useEffect } from "react"
 import { useLocation, useParams } from "react-router"
+import { Head } from "@/components/seo/head"
 
 const ProductDetailPage = () => {
 
@@ -21,14 +22,21 @@ const ProductDetailPage = () => {
   }, [location.pathname])
 
   return (
-    <div className="flex flex-col gap-12">
+    <>
+      <Head
+        title={data ? data.data.name : "Detail Produk"}
+        description={data ? data.data.description : "Detail lengkap produk keramik dari CV Aneka Keramik."}
+      />
 
-      <BreadcrumbsSection/>
+      <div className="flex flex-col gap-12">
 
-      {data &&
-        <ProductDetail product={data.data}/>
-      }
-    </div>
+        <BreadcrumbsSection/>
+
+        {data &&
+          <ProductDetail product={data.data}/>
+        }
+      </div>
+    </>
   )
 }
 

@@ -5,6 +5,7 @@ import Header from "@/components/common/header/header"
 import TileCanvasInput from "@/features/tile-calculator/components/tile-canvas-input"
 import type { Product } from "@/types/product"
 import { useState } from "react"
+import { Head } from "@/components/seo/head"
 
 const TileCalculatorPage = () => {
 
@@ -15,29 +16,36 @@ const TileCalculatorPage = () => {
   }
 
   return (
-    <div className="flex flex-col min-h-[100vh]">
-      <div className="flex-1">
-        <Header/>
-        <main className="mt-4">
-          <Container className="flex flex-col gap-12">
-            
-            <section>
-              <TileCanvasInput onSelect={handleSelectProduct}/>
-            </section>
+    <>
+      <Head
+        title="Kalkulator Ubin"
+        description="Hitung kebutuhan ubin dalam ruangan dengan fitur kanvas sketsa tata letak ruangan!"
+      />
 
-            {selectedProduct &&
-              <TileCalculatorCanvas
-                tileHeight={selectedProduct.specification.size.height}
-                tileWidth={selectedProduct.specification.size.width}
-                tilePrice={selectedProduct.finalPrice}
-                tilesPerBox={selectedProduct.tilesPerBox}
-              />
-            }
-          </Container>
-        </main>
+      <div className="flex flex-col min-h-[100vh]">
+        <div className="flex-1">
+          <Header/>
+          <main className="mt-4">
+            <Container className="flex flex-col gap-12">
+              
+              <section>
+                <TileCanvasInput onSelect={handleSelectProduct}/>
+              </section>
+
+              {selectedProduct &&
+                <TileCalculatorCanvas
+                  tileHeight={selectedProduct.specification.size.height}
+                  tileWidth={selectedProduct.specification.size.width}
+                  tilePrice={selectedProduct.finalPrice}
+                  tilesPerBox={selectedProduct.tilesPerBox}
+                />
+              }
+            </Container>
+          </main>
+        </div>
+        <Footer className="mt-20"/>
       </div>
-      <Footer className="mt-20"/>
-    </div>
+    </>
   )
 }
 
