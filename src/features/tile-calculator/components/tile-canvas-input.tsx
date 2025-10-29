@@ -7,10 +7,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { capitalize, formatCurrency } from "@/utils/string-fn"
 import { Separator } from "@/components/ui/separator"
 import { useSearchParams } from "@/hooks/use-search-params"
-import { useSingleProductQuery } from "@/features/catalog/hooks/use-product-query"
 import SaveProductButton from "../../catalog/components/save-product-button"
 import { Link } from "react-router"
 import { getProductImgUrl } from "@/utils/url"
+import { useGetProduct } from "@/features/catalog/api/get-product"
 
 interface Props{
   onSelect?: (product: Product|null) => void
@@ -30,7 +30,12 @@ const TileCanvasInput = ({onSelect}:Props) => {
   }
 
   const productId = getSearchParams("product")
-  const {data} = useSingleProductQuery(productId ?? undefined)
+  const {data} = useGetProduct({
+    productId: productId ?? "",
+    queryConfig: {
+      enabled: !!productId
+    }
+  })
 
   useEffect(() => {
     if (data) {

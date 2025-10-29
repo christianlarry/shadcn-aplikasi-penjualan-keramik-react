@@ -2,12 +2,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogPortal, DialogTitle} from "@/components/ui/dialog"
 import { Separator } from "@/components/ui/separator"
-import { useProductQuery } from "@/features/catalog/hooks/use-product-query"
 import { capitalize } from "@/utils/string-fn"
 import { getProductImgUrl } from "@/utils/url"
 import type { Product } from "@/features/catalog/types/product"
 import { Search } from "lucide-react"
 import { useRef, useState } from "react"
+import { useGetProducts } from "@/features/catalog/api/get-products"
 
 interface Props{
   open?:boolean
@@ -26,11 +26,13 @@ const ChooseProductModal = ({
   const [input, setInput] = useState<string>("")
   const [searchKeyword, setSearchKeyword] = useState<string|undefined>(undefined)
 
-  const {data} = useProductQuery({
-    search:searchKeyword,
-    size: 10,
-    options: {
-      enabled: !!searchKeyword // Only run query if searchKeyword is defined
+  const {data} = useGetProducts({
+    params: {
+      search:searchKeyword,
+      size: 10,
+      options: {
+        enabled: !!searchKeyword // Only run query if searchKeyword is defined
+      }
     }
   })
 

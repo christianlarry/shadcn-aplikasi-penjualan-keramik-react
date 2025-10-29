@@ -7,6 +7,7 @@ import { FILTER_OPTIONS_CONFIG } from '@/features/catalog/constants/catalog'
 import { useCatalog } from '@/features/catalog/contexts/catalog-context'
 import { useSearchParams } from '@/hooks/use-search-params'
 import { useGetProductFilterOptions } from '../api/get-product-filter-options'
+import FetchLoaders from '@/components/common/loaders/fetch-loaders'
 
 const CatalogSidebarFilter = () => {
 
@@ -17,7 +18,7 @@ const CatalogSidebarFilter = () => {
   const {filters,setFilters} = useCatalog()
 
   // Get Options
-  const {data} = useGetProductFilterOptions()
+  const {data,isLoading} = useGetProductFilterOptions()
 
   // Set Search Query for Filter Options
   const setFilterSearchParams = (key: string, filterOptions: Options[] | null) => {
@@ -63,8 +64,12 @@ const CatalogSidebarFilter = () => {
         </Fragment>
       ))}
 
-      {!data &&
+      {data && data.data.length < 1 &&
         <div className="text-sm text-muted-foreground">Tidak ada opsi filter yang tersedia. Coba lagi nanti</div>
+      }
+
+      {isLoading &&
+        <FetchLoaders/>
       }
     </div>
   )

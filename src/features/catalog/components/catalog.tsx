@@ -6,10 +6,10 @@ import CatalogSidebar from "./catalog-sidebar"
 import CatalogTop from "./catalog-top"
 import { useLocation } from "react-router"
 import { useCatalog } from "@/features/catalog/contexts/catalog-context"
-import { Button } from "@/components/ui/button"
 import { useSearchParams } from "@/hooks/use-search-params"
 import { EmptyProduct } from "./empty-product"
 import { useGetProducts } from "../api/get-products"
+import FetchLoaders from "@/components/common/loaders/fetch-loaders"
 
 const PAGINATION_LIMIT = 9
 
@@ -24,7 +24,7 @@ const Catalog = ({
   const [page,setPage] = useState<number>(1)
   const {filters,sort,search} = useCatalog()
 
-  const {data} = useGetProducts({
+  const {data,isLoading,isFetching,refetch} = useGetProducts({
     params: {
       page: page,
       filters:{
@@ -79,21 +79,25 @@ const Catalog = ({
               <ProductCard product={product} key={product._id ?? idx}/>
             ))}
 
-            {(data && data.data.length < 1) &&
-              <div className="flex items-center justify-center col-span-3">
-                <Button className="text-center" variant={"outline"}>Produk tidak ada:(</Button>
+            {(data && data.data.length < 1 && !isFetching) &&
+              <div className="col-span-3">
+                <EmptyProduct
+                  title="Produk Tidak Ditemukan"
+                  description="Tidak ada produk yang sesuai dengan kriteria pencarian Anda."
+                  onReload={()=>refetch()}
+                />
               </div>
             }
 
-            {!data &&
-              <div className="col-span-3">
-                <EmptyProduct/>
+            {(isLoading || isFetching) && 
+              <div className="col-span-3 flex justify-center">
+                <FetchLoaders/>
               </div>
             }
           </div>
         </section>
         
-        {data &&
+        {data && data.data.length > 0 &&
           <section id="catalog-pagination" className="mt-4">
             <Pagination
               totalPages={data.page.totalPages}
