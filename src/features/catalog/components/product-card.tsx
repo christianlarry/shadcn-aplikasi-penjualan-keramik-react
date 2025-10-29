@@ -67,7 +67,7 @@ const ProductCard = ({
         <div className="flex gap-4 justify-between mt-6">
           <div className="w-[70%] flex flex-col gap-2">
             <p className="truncate">
-              {product.name} | <span className="font-semibold text-sm">{product.specification.size.width}x{product.specification.size.height}cm</span>
+              {product.brand + " " + product.name} | <span className="font-semibold text-sm">{product.specification.size.width}x{product.specification.size.height}cm</span>
             </p>
             {/* Harga */}
             {product.discount ? (

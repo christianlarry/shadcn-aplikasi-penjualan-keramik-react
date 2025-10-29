@@ -34,14 +34,14 @@ const CartItem = ({item,product}:CartItemProps) => {
             <AvatarFallback className="rounded-md">{capitalize(product.name[0])}</AvatarFallback>
           </Avatar>
         </div>
-        <div className="flex flex-1 flex-col gap-1">
+        <div className="flex flex-1 flex-col">
           <span className="text-muted-foreground">{product.brand}</span>
-          <h4 className="text-base uppercase font-semibold">{product.name}</h4>
-          <div className="flex flex-wrap gap-2 text-muted-foreground">
+          <h4 className="text-lg font-semibold">{product.name}</h4>
+          <div className="flex flex-wrap gap-2 text-muted-foreground mt-1">
             <span>Ukuran: <span className="text-primary font-semibold">{product.specification.size.width}x{product.specification.size.height}cm</span></span>
             <span>Penggunaan: <span className="text-primary font-semibold">{product.specification.application.join(", ")}</span></span>
           </div>
-          <div className="flex flex-wrap gap-2 mt-1">
+          <div className="flex flex-wrap gap-2 mt-2">
             {product.isBestSeller && <Badge variant="outline">Best Seller</Badge>}
             {product.isNewArrivals && <Badge variant="outline">New Arrivals</Badge>}
             {product.discount && <Badge variant="destructive">{product.discount}% off</Badge>}

@@ -25,7 +25,7 @@ const ProductDetailPage = () => {
   return (
     <>
       <Head
-        title={data ? data.data.name : "Detail Produk"}
+        title={data ? data.data.brand + " " + data.data.name : "Detail Produk"}
         description={data ? data.data.description : "Detail lengkap produk keramik dari CV Aneka Keramik."}
       />
 

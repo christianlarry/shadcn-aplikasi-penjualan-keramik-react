@@ -51,40 +51,32 @@ const TileCanvasInput = ({onSelect}:Props) => {
     <>
       {selectedProduct ? 
         <div className="border-1 border-border rounded-md">
-          <div className="flex flex-col lg:flex-row gap-4 lg:gap-12 px-4 py-6 items-start lg:items-center">
-            <div className="min-w-[100px] sm:max-w-[300px] lg:max-w-[250px] aspect-square w-full">
-              <Avatar className="w-full h-full rounded-md">
-                <AvatarImage
-                  src={getProductImgUrl(selectedProduct.image ?? "")}
-                  className="object-cover object-center"
-                />
-                <AvatarFallback className="rounded-md">{capitalize(selectedProduct.name[0])}</AvatarFallback>
-              </Avatar>
+          <div className="flex flex-col lg:flex-row gap-4 lg:gap-12 px-4 py-6">
+            <div className="flex flex-1 gap-4 items-center">
+              <div className="min-w-[100px] sm:max-w-[300px] lg:max-w-[250px] aspect-square w-full">
+                <Avatar className="w-full h-full rounded-md">
+                  <AvatarImage
+                    src={getProductImgUrl(selectedProduct.image ?? "")}
+                    className="object-cover object-center"
+                  />
+                  <AvatarFallback className="rounded-md">{capitalize(selectedProduct.name[0])}</AvatarFallback>
+                </Avatar>
+              </div>
+
+              <div className="flex flex-col">
+                <span className="text-muted-foreground text-xl">{selectedProduct.brand}</span>
+                <h4 className="text-3xl font-semibold">{selectedProduct.name}</h4>
+                <span className="mt-4">Ukuran: <span className="text-primary font-semibold">{selectedProduct.specification.size.width}x{selectedProduct.specification.size.height}cm</span></span>
+                <span>1 box = <span className="text-primary font-semibold">{selectedProduct.tilesPerBox}pcs</span></span>
+                <span className="mt-4 font-semibold text-xl">Rp{formatCurrency(selectedProduct.price)}</span>
+              </div>
             </div>
 
             <div className="self-stretch hidden lg:block">
               <Separator orientation="vertical"/>
             </div>
 
-            <div className="flex flex-col">
-              <h3 className="text-lg font-semibold">{selectedProduct.name}</h3>
-              <span className="text-lg">Rp{formatCurrency(selectedProduct.price)}</span>
-            </div>
-
-            <div className="self-stretch hidden lg:block">
-              <Separator orientation="vertical"/>
-            </div>
-
-            <div className="flex flex-col gap-1">
-              <span className="text-lg font-semibold"><span className="font-normal">Size : </span>{selectedProduct.specification.size.width}x{selectedProduct.specification.size.height}cm</span>
-              <span className="text-lg font-semibold"><span className="font-normal">Isi per box : </span>{selectedProduct.tilesPerBox}pcs</span>
-            </div>
-
-            <div className="self-stretch hidden lg:block">
-              <Separator orientation="vertical"/>
-            </div>
-
-            <div className="flex flex-wrap gap-2 items-center justify-center">
+            <div className="flex-1 flex flex-wrap gap-2 items-center justify-start lg:justify-center">
               <Button onClick={()=>setOpenChooseProductModal(true)}>Ganti Ubin</Button>
               <Button variant={"outline"} asChild>
                 <Link to={`/catalog/product/${selectedProduct._id}`}>

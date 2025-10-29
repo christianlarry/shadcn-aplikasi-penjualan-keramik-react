@@ -11,7 +11,7 @@ const ConfirmationResetCartDialog = () => {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant={"link"} className="font-normal cursor-pointer"><Trash className="text-destructive"/>Kosongkan Keranjang</Button>
+        <Button variant={"outline"} size={"icon"} className="cursor-pointer"><Trash/></Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>

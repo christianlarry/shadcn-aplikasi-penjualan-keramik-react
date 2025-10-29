@@ -13,6 +13,7 @@ interface EmptyProductProps {
   title?: string
   description?: string
   onReload?: () => void
+  hideReloadButton?: boolean
 }
 
 export function EmptyProduct({
@@ -21,6 +22,7 @@ export function EmptyProduct({
   onReload = () => {
     window.location.reload()
   },
+  hideReloadButton = false
 }:EmptyProductProps) {
   return (
     <Empty className="border border-border">
@@ -31,11 +33,13 @@ export function EmptyProduct({
         <EmptyTitle>{title}</EmptyTitle>
         <EmptyDescription>{description}</EmptyDescription>
       </EmptyHeader>
-      <EmptyContent>
-        <div>
-          <Button onClick={()=>onReload()}>Muat Ulang</Button>
-        </div>
-      </EmptyContent>
+      {!hideReloadButton &&
+        <EmptyContent>
+          <div>
+            <Button onClick={()=>onReload()}>Muat Ulang</Button>
+          </div>
+        </EmptyContent>
+      }
     </Empty>
   )
 }
