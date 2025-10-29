@@ -24,7 +24,7 @@ const Catalog = ({
   const [page,setPage] = useState<number>(1)
   const {filters,sort,search} = useCatalog()
 
-  const {data,isLoading,isFetching,refetch} = useGetProducts({
+  const {data,isLoading,isFetching,refetch,error} = useGetProducts({
     params: {
       page: page,
       filters:{
@@ -92,6 +92,12 @@ const Catalog = ({
             {(isLoading || isFetching) && Array.from({length: 6}).map((_,idx)=>( 
               <ProductCardSkeleton key={idx}/>
             ))}
+
+            {error &&
+              <div className="col-span-3">
+                <EmptyProduct/>
+              </div>
+            }
           </div>
         </section>
         

@@ -68,7 +68,7 @@ const CatalogSidebarFilter = () => {
         <div className="text-sm text-muted-foreground">Tidak ada opsi filter yang tersedia. Coba lagi nanti</div>
       }
 
-      {isLoading &&
+      {(isLoading) &&
         <FetchLoaders/>
       }
     </div>

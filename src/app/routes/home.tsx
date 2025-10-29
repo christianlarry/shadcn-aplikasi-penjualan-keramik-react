@@ -1,4 +1,4 @@
-import heroImage from "@/assets/images/hero/hero-image-1.jpg"
+import heroImage from "@/assets/images/hero/hero-image-1.webp"
 
 import CatalogCard from "@/features/catalog/components/catalog-category-card"
 import SearchBar from "@/components/common/input/search-bar"
