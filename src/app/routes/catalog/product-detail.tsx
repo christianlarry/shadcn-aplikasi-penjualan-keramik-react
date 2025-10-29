@@ -4,6 +4,7 @@ import { useEffect } from "react"
 import { useLocation, useParams } from "react-router"
 import { Head } from "@/components/seo/head"
 import { useGetProduct } from "@/features/catalog/api/get-product"
+import ProductDetailSkeleton from "@/features/catalog/components/product-detail-skeleton"
 
 const ProductDetailPage = () => {
 
@@ -12,7 +13,7 @@ const ProductDetailPage = () => {
 
   const productId = params.id ?? ""
 
-  const {data} = useGetProduct({productId})
+  const {data,isLoading} = useGetProduct({productId})
 
   useEffect(() => {
     window.scrollTo({
@@ -34,6 +35,10 @@ const ProductDetailPage = () => {
 
         {data &&
           <ProductDetail product={data.data}/>
+        }
+
+        {isLoading &&
+          <ProductDetailSkeleton/>
         }
       </div>
     </>

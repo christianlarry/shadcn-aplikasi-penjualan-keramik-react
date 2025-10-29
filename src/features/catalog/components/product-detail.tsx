@@ -14,7 +14,6 @@ import { getProductImgUrl } from "@/utils/url";
 import { Link } from "react-router";
 
 
-
 interface Props{
   product:Product
 }

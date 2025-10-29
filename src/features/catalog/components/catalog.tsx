@@ -9,7 +9,7 @@ import { useCatalog } from "@/features/catalog/contexts/catalog-context"
 import { useSearchParams } from "@/hooks/use-search-params"
 import { EmptyProduct } from "./empty-product"
 import { useGetProducts } from "../api/get-products"
-import FetchLoaders from "@/components/common/loaders/fetch-loaders"
+import ProductCardSkeleton from "./product-card-skeleton"
 
 const PAGINATION_LIMIT = 9
 
@@ -89,11 +89,9 @@ const Catalog = ({
               </div>
             }
 
-            {(isLoading || isFetching) && 
-              <div className="col-span-3 flex justify-center">
-                <FetchLoaders/>
-              </div>
-            }
+            {(isLoading || isFetching) && Array.from({length: 6}).map((_,idx)=>( 
+              <ProductCardSkeleton key={idx}/>
+            ))}
           </div>
         </section>
         
