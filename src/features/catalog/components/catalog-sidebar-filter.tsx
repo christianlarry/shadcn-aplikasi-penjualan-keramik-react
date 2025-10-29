@@ -1,12 +1,12 @@
-import { useProductFiltersQuery } from '@/features/catalog/hooks/use-product-filters-query'
 import SidebarSelectInput, { type Options } from './catalog-sidebar-collapsible'
 import { Fragment, useEffect } from 'react'
-import type { ProductFilterOptions } from '@/types/product'
+import type { ProductFilterOptions } from '@/features/catalog/types/product'
 import { useLocation } from 'react-router'
 import { Separator } from '@/components/ui/separator'
 import { FILTER_OPTIONS_CONFIG } from '@/features/catalog/constants/catalog'
 import { useCatalog } from '@/features/catalog/contexts/catalog-context'
 import { useSearchParams } from '@/hooks/use-search-params'
+import { useGetProductFilterOptions } from '../api/get-product-filter-options'
 
 const CatalogSidebarFilter = () => {
 
@@ -17,7 +17,7 @@ const CatalogSidebarFilter = () => {
   const {filters,setFilters} = useCatalog()
 
   // Get Options
-  const {data} = useProductFiltersQuery()
+  const {data} = useGetProductFilterOptions()
 
   // Set Search Query for Filter Options
   const setFilterSearchParams = (key: string, filterOptions: Options[] | null) => {

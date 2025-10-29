@@ -1,9 +1,9 @@
 import ProductDetail from "@/features/catalog/components/product-detail"
 import BreadcrumbsSection from "@/components/common/sections/breadcrumbs-section"
-import { useSingleProductQuery } from "@/features/catalog/hooks/use-product-query"
 import { useEffect } from "react"
 import { useLocation, useParams } from "react-router"
 import { Head } from "@/components/seo/head"
+import { useGetProduct } from "@/features/catalog/api/get-product"
 
 const ProductDetailPage = () => {
 
@@ -12,7 +12,7 @@ const ProductDetailPage = () => {
 
   const productId = params.id ?? ""
 
-  const {data} = useSingleProductQuery(productId)
+  const {data} = useGetProduct({productId})
 
   useEffect(() => {
     window.scrollTo({

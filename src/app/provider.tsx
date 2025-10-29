@@ -1,4 +1,3 @@
-import { LoadingScreen } from "@/components/common/screen/loading-screen"
 import { Toaster } from "@/components/ui/sonner"
 import { queryClient } from "@/lib/react-query"
 import { QueryClientProvider } from "@tanstack/react-query"
@@ -11,14 +10,8 @@ type AppProviderProps = {
 export const AppProvider = ({ children }: AppProviderProps) => {
   return (
     <QueryClientProvider client={queryClient}>
-      <React.Suspense
-        fallback={<LoadingScreen />}
-      >
-
-        {children}
-
-        <Toaster />
-      </React.Suspense>
+      {children}
+      <Toaster />
     </QueryClientProvider>
   )
 }

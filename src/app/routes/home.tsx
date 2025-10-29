@@ -10,18 +10,20 @@ import { Calculator, ChevronLeft, ChevronRight, Map, ShoppingCart } from "lucide
 import { useRef, useState } from "react"
 import { Link } from "react-router"
 import Logo from "@/components/common/logo/logo"
-import { useProductQuery } from "@/features/catalog/hooks/use-product-query"
 import { EmptyProduct } from "@/features/catalog/components/empty-product"
 import { INFORMASI_TOKO } from "@/constants/informasi-toko"
 import { Head } from "@/components/seo/head"
+import { useGetProducts } from "@/features/catalog/api/get-products"
 
 const HomePage = () => {
 
   // Get 6 Best Seller Product
-  const {data} = useProductQuery({
-    page: 1,
-    size: 6,
-    isBestSeller: true
+  const {data} = useGetProducts({
+    params:{
+      page: 1,
+      size: 6,
+      isBestSeller: true
+    }
   })
 
   const sliderRef = useRef<ProductSliderRef>(null)

@@ -7,12 +7,12 @@ import { INFORMASI_TOKO } from "@/constants/informasi-toko"
 import { formatCurrency } from "@/utils/string-fn"
 import { useCartStore } from "@/features/order/store/use-cart-store"
 import { useOrderStore } from "@/features/order/store/use-order-store"
-import type { GetSingleProductResponse} from "@/types/product"
+import type { GetProductResponse} from "@/features/catalog/types/product"
 import { DialogClose } from "@radix-ui/react-dialog"
 import { Info, MessageCircle } from "lucide-react"
 
 interface Props{
-  productQueryResult:(GetSingleProductResponse | undefined)[]
+  productQueryResult:(GetProductResponse | undefined)[]
 }
 
 const OrderModal = ({productQueryResult}:Props) => {

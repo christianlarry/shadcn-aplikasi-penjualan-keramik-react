@@ -1,6 +1,6 @@
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel"
 import ProductCard from "../../../features/catalog/components/product-card"
-import type { Product } from "@/types/product"
+import type { Product } from "@/features/catalog/types/product"
 import {forwardRef, useCallback, useEffect, useImperativeHandle, useState } from "react"
 import { Progress } from "@/components/ui/progress"
 

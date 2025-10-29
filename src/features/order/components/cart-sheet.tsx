@@ -1,34 +1,65 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { useSingleProductQueries } from "@/features/catalog/hooks/use-product-query"
-import { capitalize } from "@/utils/string-fn"
 import { formatCurrency} from "@/utils/string-fn";
-import { getProductImgUrl } from "@/utils/url";
 import { useCartStore } from "@/features/order/store/use-cart-store"
-import { Link2, Minus, Plus, ShoppingCart } from "lucide-react"
+import { Link2, ShoppingCart } from "lucide-react"
 import { Link } from "react-router"
 import ConfirmationResetCartDialog from "./reset-cart-dialog"
 import OrderModal from "./order-modal"
+import { useGetProductsByIds } from "@/features/catalog/api/get-products-by-ids"
+import { useMemo } from "react"
+import CartItem from "./cart-item"
 
 const CartSheet = () => {
 
   // Cart Store State
   const totalCart = useCartStore((state)=>state.cart.length)
   const cart = useCartStore((state)=>state.cart)
-  const add = useCartStore((state)=>state.addToCart)
-  const decrementQuantity = useCartStore((state)=>state.decrementQuantity)
 
   const openCart = useCartStore((state)=>state.openCart)
   const setOpenCart = useCartStore((state)=>state.setOpenCart)
 
   // Get Products from cart ids
-  const products = useSingleProductQueries(cart.map(item=>item.id))
+  const products = useGetProductsByIds({
+    productIds: cart.map(item=>item.id)
+  })
 
   const isLoading = products.some(product => product.isLoading)
   const isError = products.some(product => product.isError)
+
+  const {cartItemsWithData,totalAmount} = useMemo(()=>{
+    if (isLoading || isError) {
+      return { cartItemsWithData: [], totalAmount: 0 };
+    }
+
+    // Buat Map untuk pencarian produk yang efisien (O(1) lookup)
+    const productsMap = new Map(
+      products.map(query => [query.data?.data._id, query.data?.data])
+    );
+
+    const cartItemsWithData = cart
+      .map(item => {
+        const product = productsMap.get(item.id);
+        // Jika produk ditemukan, gabungkan data cart dengan data produk
+        if (product) {
+          return {
+            ...item, // id, quantity
+            product, // data produk lengkap
+          };
+        }
+        return null; // Jika produk tidak ditemukan, kembalikan null
+      })
+      .filter((item)=>item != null); // Hapus item yang null
+
+    // Hitung total harga dari data yang sudah digabungkan
+    const totalAmount = cartItemsWithData.reduce((total, item) => {
+      return total + (item.product.finalPrice * item.quantity);
+    }, 0);
+
+    return { cartItemsWithData, totalAmount };
+  },[cart, products, isLoading, isError])
 
   return (
     <Sheet open={openCart} onOpenChange={setOpenCart}>
@@ -53,58 +84,16 @@ const CartSheet = () => {
 
         <div className="grid flex-1 auto-rows-min gap-6 px-4 overflow-y-auto rounded-md">
           {!(isLoading || isError) &&
-            <ul className="rounded-md flex flex-col gap-8">
-              {cart.length > 0 && cart.map((item,idx)=>{
-                const product = products.filter(p=>p.data?.data._id === item.id)[0].data
-                if(!product) return null
+            <ul className="rounded-md flex flex-col">
+              
+              {cartItemsWithData.length > 0 && cartItemsWithData.map((item,idx)=>{
+                const {product} = item
 
                 return (
-                  <li key={item.id}>
-                    <div className="rounded-md flex gap-2 items-start text-sm">
-                      <div className="w-[80px]">
-                        <Avatar className="rounded-md aspect-square w-full h-full">
-                          <AvatarImage
-                            src={getProductImgUrl(product.data.image ?? "")}
-                            alt="Product Image"
-                            className="object-cover object-center rounded-md"
-                          />
-                          <AvatarFallback className="rounded-md">{capitalize(product.data.name[0])}</AvatarFallback>
-                        </Avatar>
-                      </div>
-                      <div className="flex flex-1 flex-col gap-1">
-                        <span className="text-muted-foreground">{product.data.brand}</span>
-                        <h4 className="text-base uppercase font-semibold">{product.data.name}</h4>
-                        <div className="flex flex-wrap gap-2 text-muted-foreground">
-                          <span>Ukuran: <span className="text-primary font-semibold">{product.data.specification.size.width}x{product.data.specification.size.height}cm</span></span>
-                          <span>Penggunaan: <span className="text-primary font-semibold">{product.data.specification.application.join(", ")}</span></span>
-                        </div>
-                        <div className="flex flex-wrap gap-2 mt-1">
-                          {product.data.isBestSeller && <Badge variant="outline">Best Seller</Badge>}
-                          {product.data.isNewArrivals && <Badge variant="outline">New Arrivals</Badge>}
-                          {product.data.discount && <Badge variant="destructive">{product.data.discount}% off</Badge>}
-                        </div>
-
-                        <div className="flex flex-wrap gap-4 items-start justify-between mt-6">
-                          <div className="flex flex-col gap-1">
-                            <span className="font-medium">{product.data.tilesPerBox}pcs <span className="font-normal">/ box</span></span>
-                            <div className="flex items-center gap-2">
-                              <Button variant="outline" size="icon" onClick={()=>decrementQuantity(item.id)}><Minus/></Button>
-                              <Button variant="secondary" size="icon">{item.quantity}</Button>
-                              <Button variant="outline" size="icon" onClick={()=>add({...item,quantity:1})}><Plus/></Button>
-                            </div>
-                          </div>
-                          <div className="flex flex-col items-end">
-                            {product.data.discount &&
-                              <span className="text-base text-muted-foreground line-through">Rp{formatCurrency(product.data.price * item.quantity)}</span>
-                            }
-                            <span className="text-lg font-semibold">Rp{formatCurrency(product.data.finalPrice * item.quantity)}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {(idx != cart.length-1) && <Separator className="mt-8"/>}
-                  </li>
+                  <>
+                    <CartItem key={item.id} item={item} product={product}/>
+                    {(idx != cart.length-1) && <Separator className="my-8"/>}
+                  </>
                 )
               })}
 
@@ -127,18 +116,13 @@ const CartSheet = () => {
         </div>
 
         <SheetFooter className="pt-0">
-          {cart.length > 0 &&
+          {cartItemsWithData.length > 0 &&
             <div className="flex items-center justify-between gap-4">
               <ConfirmationResetCartDialog/>
               <div className="flex items-center justify-end gap-2">
                 <span>Total:</span>
-                {products.length > 0 && 
-                  <span className="text-lg font-semibold">Rp{formatCurrency(cart.reduce((total, item) => {
-                    const product = products.filter(p=>p.data?.data._id === item.id)[0]?.data
-                    if(!product) return total
-                    return total + (product ? product.data.finalPrice * item.quantity : 0)
-                  }, 0))}</span>
-                }
+                {/* --- LEBIH CLEAN: Langsung gunakan total yang sudah dihitung --- */}
+                <span className="text-lg font-semibold">{formatCurrency(totalAmount)}</span>
               </div>
             </div>
           }

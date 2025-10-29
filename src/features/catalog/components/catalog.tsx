@@ -4,12 +4,12 @@ import ProductCard from "./product-card"
 import Pagination from "../../../components/common/pagination/pagination"
 import CatalogSidebar from "./catalog-sidebar"
 import CatalogTop from "./catalog-top"
-import { useProductQuery } from "@/features/catalog/hooks/use-product-query"
 import { useLocation } from "react-router"
 import { useCatalog } from "@/features/catalog/contexts/catalog-context"
 import { Button } from "@/components/ui/button"
 import { useSearchParams } from "@/hooks/use-search-params"
 import { EmptyProduct } from "./empty-product"
+import { useGetProducts } from "../api/get-products"
 
 const PAGINATION_LIMIT = 9
 
@@ -24,21 +24,23 @@ const Catalog = ({
   const [page,setPage] = useState<number>(1)
   const {filters,sort,search} = useCatalog()
 
-  const {data} = useProductQuery({
-    page: page,
-    filters:{
-      application: filters["application"],
-      color: filters["color"],
-      design: filters["design"],
-      texture: filters["texture"],
-      finishing: filters["finishing"],
-      size: filters["size"]
-    },
-    sort: sort,
-    search: search,
-    isBestSeller: category==="bestSeller",
-    isDiscount: category==="discount",
-    isNewArrivals: category==="newArrivals"
+  const {data} = useGetProducts({
+    params: {
+      page: page,
+      filters:{
+        application: filters["application"],
+        color: filters["color"],
+        design: filters["design"],
+        texture: filters["texture"],
+        finishing: filters["finishing"],
+        size: filters["size"]
+      },
+      sort: sort,
+      search: search,
+      isBestSeller: category==="bestSeller",
+      isDiscount: category==="discount",
+      isNewArrivals: category==="newArrivals"
+    }
   })
 
   const location = useLocation()

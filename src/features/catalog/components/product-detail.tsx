@@ -8,7 +8,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { MessageCircle, Calculator } from "lucide-react";
-import type { Product } from "@/types/product";
+import type { Product } from "@/features/catalog/types/product";
 import { formatCurrency} from "@/utils/string-fn";
 import { getProductImgUrl } from "@/utils/url";
 import { Link } from "react-router";

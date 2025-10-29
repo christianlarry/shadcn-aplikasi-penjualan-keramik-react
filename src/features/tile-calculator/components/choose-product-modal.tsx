@@ -5,7 +5,7 @@ import { Separator } from "@/components/ui/separator"
 import { useProductQuery } from "@/features/catalog/hooks/use-product-query"
 import { capitalize } from "@/utils/string-fn"
 import { getProductImgUrl } from "@/utils/url"
-import type { Product } from "@/types/product"
+import type { Product } from "@/features/catalog/types/product"
 import { Search } from "lucide-react"
 import { useRef, useState } from "react"
 

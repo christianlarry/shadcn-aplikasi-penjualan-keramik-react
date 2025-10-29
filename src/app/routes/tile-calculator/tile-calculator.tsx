@@ -3,7 +3,7 @@ import Container from "@/components/common/container/container"
 import Footer from "@/components/common/footer/footer"
 import Header from "@/components/common/header/header"
 import TileCanvasInput from "@/features/tile-calculator/components/tile-canvas-input"
-import type { Product } from "@/types/product"
+import type { Product } from "@/features/catalog/types/product"
 import { useState } from "react"
 import { Head } from "@/components/seo/head"
 
