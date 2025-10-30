@@ -50,7 +50,7 @@ const TileCanvasInput = ({onSelect}:Props) => {
   return (
     <>
       {selectedProduct ? 
-        <div className="border-1 border-border rounded-md">
+        <div className="border-1 border-dashed rounded-md">
           <div className="flex flex-col lg:flex-row gap-4 lg:gap-12 px-4 py-6">
             <div className="flex flex-1 gap-4 items-center">
               <div className="min-w-[100px] sm:max-w-[300px] lg:max-w-[250px] aspect-square w-full">

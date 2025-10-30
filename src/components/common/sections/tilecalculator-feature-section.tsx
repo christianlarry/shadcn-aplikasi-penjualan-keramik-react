@@ -1,21 +1,26 @@
-import calculatorBannerImage from "@/assets/images/calculator-banner-image.webp"
 import { Button } from "@/components/ui/button"
 import { ChevronRight } from "lucide-react"
 import { Link } from "react-router"
 import Container from "../container/container"
 
-const TilecalculatorFeatureSection = () => {
+import tileCalculatorFeatureVideo from "@/assets/videos/tile-calculator-feature.webm"
+
+const TileCalculatorFeatureSection = () => {
   return (
     <Container className="w-full mt-20">
       <section>
-        <div className="w-full bg-primary flex rounded-md overflow-hidden">
-          <div className="w-[45%] relative">
-            <div className="absolute inset-0">
-              <img
-                src={calculatorBannerImage}
-                alt="Kalkulator Ubin"
+        <div className="w-full bg-primary flex rounded-md overflow-hidden flex-col lg:flex-row">
+          <div className="w-full lg:w-[45%] relative">
+            <div className="relative lg:absolute inset-0">
+              <video
+                src={tileCalculatorFeatureVideo}
+                autoPlay
+                loop
+                muted
+                playsInline
+                controls={false}
                 className="w-full h-full block object-cover object-center"
-                loading="lazy"
+                onContextMenu={(e)=>e.preventDefault()}
               />
             </div>
           </div>
@@ -39,4 +44,4 @@ const TilecalculatorFeatureSection = () => {
   )
 }
 
-export default TilecalculatorFeatureSection
+export default TileCalculatorFeatureSection

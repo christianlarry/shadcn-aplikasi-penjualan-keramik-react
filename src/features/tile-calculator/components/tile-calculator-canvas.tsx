@@ -969,7 +969,7 @@ const TileCalculatorCanvas: React.FC<RoomCanvasProps> = ({
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="bg-white p-4 rounded-lg shadow">
-              <h4 className="font-semibold text-gray-700">Dimensi Ruangan</h4>
+              <h4 className="font-semibold text-gray-700">Luas Ruangan</h4>
               <p className="text-2xl font-bold text-blue-600">{area.toFixed(2)} m²</p>
               {/* <p className="text-sm text-gray-500">Keliling: {perimeter.toFixed(2)} m</p> */}
             </div>
