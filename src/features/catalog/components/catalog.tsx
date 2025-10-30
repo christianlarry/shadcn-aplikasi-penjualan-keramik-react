@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import ProductCard from "./product-card"
 import Pagination from "../../../components/common/pagination/pagination"
 import CatalogSidebar from "./catalog-sidebar"
@@ -13,21 +13,24 @@ import ProductCardSkeleton from "./product-card-skeleton"
 
 const PAGINATION_LIMIT = 9
 
-interface Props{
+interface Props {
   category?: "default" | "bestSeller" | "newArrivals" | "discount"
 }
 
 const Catalog = ({
-  category="default"
-}:Props) => {
+  category = "default"
+}: Props) => {
 
-  const [page,setPage] = useState<number>(1)
-  const {filters,sort,search} = useCatalog()
+  // Ref
+  const catalogContainer = useRef<HTMLDivElement | null>(null)
 
-  const {data,isLoading,isFetching,refetch,error} = useGetProducts({
+  const [page, setPage] = useState<number>(1)
+  const { filters, sort, search } = useCatalog()
+
+  const { data, isLoading, isFetching, refetch, error } = useGetProducts({
     params: {
       page: page,
-      filters:{
+      filters: {
         application: filters["application"],
         color: filters["color"],
         design: filters["design"],
@@ -37,46 +40,64 @@ const Catalog = ({
       },
       sort: sort,
       search: search,
-      isBestSeller: category==="bestSeller",
-      isDiscount: category==="discount",
-      isNewArrivals: category==="newArrivals"
+      isBestSeller: category === "bestSeller",
+      isDiscount: category === "discount",
+      isNewArrivals: category === "newArrivals"
     }
   })
 
   const location = useLocation()
 
-  const {searchParamsHas,getSearchParams,setSearchParams} = useSearchParams()
+  const { searchParamsHas, getSearchParams, setSearchParams } = useSearchParams()
 
-  useEffect(()=>{
-    
-    if(searchParamsHas("page")){
+  useEffect(() => {
+
+    if (searchParamsHas("page")) {
       const pageInParams = getSearchParams("page") || "1"
       const parsedPage = parseInt(pageInParams)
 
-      if(isNaN(parsedPage)){
-        setSearchParams("page","1")
-      }else{
+      if (isNaN(parsedPage)) {
+        setSearchParams("page", "1")
+      } else {
         setPage(parsedPage)
       }
 
-    }else{
+    } else {
       setPage(1)
     }
 
-  },[location,getSearchParams,searchParamsHas,setSearchParams])
+  }, [location, getSearchParams, searchParamsHas, setSearchParams])
+
+  useEffect(() => {
+    if (data && catalogContainer.current) {
+      const element = catalogContainer.current
+      const elementTop = element.getBoundingClientRect().top + window.scrollY
+      const currentScroll = window.scrollY
+
+      // Kalau posisi scroll sekarang lebih besar (berarti udah di bawah elemen)
+      if (currentScroll > elementTop) {
+        const offset = 30
+
+        window.scrollTo({
+          top: elementTop-offset,
+          behavior: "smooth"
+        })
+      }
+    }
+  }, [data])
 
   return (
-    <div className="flex gap-6 items-start">
-      
-      <CatalogSidebar/>
+    <div className="flex gap-6 items-start" ref={catalogContainer}>
+
+      <CatalogSidebar />
 
       <div className="w-full flex flex-col gap-12">
-        <CatalogTop config={{totalData: data?.page.total ?? 0,showedData: data?.data.length ?? 0}}/>
+        <CatalogTop config={{ totalData: data?.page.total ?? 0, showedData: data?.data.length ?? 0 }} />
 
         <section id="catalog-cards">
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
-            {data && data.data.map((product,idx)=>(
-              <ProductCard product={product} key={product._id ?? idx}/>
+            {data && data.data.map((product, idx) => (
+              <ProductCard product={product} key={product._id ?? idx} />
             ))}
 
             {(data && data.data.length < 1 && !isFetching) &&
@@ -84,23 +105,23 @@ const Catalog = ({
                 <EmptyProduct
                   title="Produk Tidak Ditemukan"
                   description="Tidak ada produk yang sesuai dengan kriteria pencarian Anda."
-                  onReload={()=>refetch()}
+                  onReload={() => refetch()}
                 />
               </div>
             }
 
-            {(isLoading || isFetching) && Array.from({length: 6}).map((_,idx)=>( 
-              <ProductCardSkeleton key={idx}/>
+            {(isLoading || isFetching) && Array.from({ length: 6 }).map((_, idx) => (
+              <ProductCardSkeleton key={idx} />
             ))}
 
             {error &&
               <div className="col-span-3">
-                <EmptyProduct/>
+                <EmptyProduct />
               </div>
             }
           </div>
         </section>
-        
+
         {data && data.data.length > 0 &&
           <section id="catalog-pagination" className="mt-4">
             <Pagination

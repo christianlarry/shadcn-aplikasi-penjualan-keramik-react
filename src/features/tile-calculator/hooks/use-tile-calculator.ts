@@ -47,8 +47,6 @@ export const useTileCalculator = ({
 
   // --- Functions
   const draw = useCallback((ctx: CanvasRenderingContext2D) => {
-    console.log("Drawing canvas with lines:", lines);
-
     const { width, height } = ctx.canvas;
 
     // Clear and set up transforms
@@ -232,7 +230,7 @@ export const useTileCalculator = ({
         // Responsive canvas sizing
         const rect = container.getBoundingClientRect();
         canvas.width = rect.width;
-        canvas.height = Math.max(600, rect.height);
+        canvas.height = Math.max(700, rect.height);
 
         // Enable high DPI support
         const dpr = window.devicePixelRatio || 1;
@@ -240,7 +238,7 @@ export const useTileCalculator = ({
         canvas.height *= dpr;
         ctx.scale(dpr, dpr);
         canvas.style.width = rect.width + 'px';
-        canvas.style.height = Math.max(600, rect.height) + 'px';
+        canvas.style.height = Math.max(700, rect.height) + 'px';
 
         draw(ctx);
       }

@@ -4,6 +4,7 @@ import type { TileCalculatorData } from "../types";
 import { useTileCalculator } from "../hooks/use-tile-calculator";
 import { isPolygonClosed } from "../utils/canvas-helpers";
 import TileCalculatorControls from "./tile-calculator-controls";
+// import TileCalculatorControlsSimple from "./tile-calculator-controls-simple";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertTriangle } from "lucide-react";
 import TileCalculatorResults from "./tile-calculator-results";
@@ -50,7 +51,15 @@ const TileCalculatorCanvas: React.FC<TileCalculatorProps> = ({
       )}
 
       {/* Canvas Container */}
-      <div className="relative bg-white rounded-lg shadow-lg overflow-hidden" ref={containerRef}>
+      <div 
+        className="relative bg-white rounded-lg shadow-lg overflow-hidden" 
+        ref={containerRef}
+        onMouseDown={(e)=>{
+          if(e.button === 1){
+            e.preventDefault()
+          }
+        }}
+      >
         <canvas
           ref={canvasRef}
           className={cn("border-2 border-gray-300 cursor-crosshair w-full", state.isPanning && "cursor-grabbing")}
@@ -75,9 +84,14 @@ const TileCalculatorCanvas: React.FC<TileCalculatorProps> = ({
         )}
 
         {/* Scale Indicator */}
-        <div className="absolute bottom-4 left-4 bg-white bg-opacity-90 px-3 py-1 rounded text-sm">
-          Zoom: {(state.scale * 100).toFixed(0)}% | 1 kotak = 1 meter
+        <div className="absolute bottom-4 left-4 bg-white px-3 py-1 text-sm border border-border rounded-lg shadow-sm/20">
+          Zoom : {(state.scale * 100).toFixed(0)}% <span className="text-muted-foreground/40">|</span> 1 kotak = 1 meter
         </div>
+
+        {/* Controls */}
+        {/* <div className="absolute top-4 left-[30%]">
+          <TileCalculatorControlsSimple setter={setter} handlers={handlers} state={state}/>
+        </div> */}
       </div>
 
       {/* Enhanced Results Panel */}
