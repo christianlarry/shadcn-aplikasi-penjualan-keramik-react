@@ -97,7 +97,7 @@ export const saveCanvasAsJSON = (data: CanvasSaveData): void => {
 };
 
 /**
- * Membaca, mem-parsing, dan memvalidasi file JSON.
+ * Membaca, mem-parsing, dan validasi file JSON.
  * @param file - File JSON yang akan dimuat.
  * @returns Promise yang akan resolve dengan data kanvas yang valid.
  * @rejects Akan melempar error jika file tidak bisa dibaca, tidak valid, atau formatnya salah.

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { CanvasSaveData, Line, Point } from "../types";
 import { calculateArea, calculatePerimeter, checkIntersection, getCanvasCoordinates, GRID_SIZE, isPolygonClosed, loadCanvasFromJSON, MAX_ZOOM, MIN_LINE_LENGTH, MIN_ZOOM, saveCanvasAsJSON, SNAP_THRESHOLD, WASTE_FACTOR } from "../utils/canvas-helpers";
 import type { TileCalculatorProps } from "../components/tile-calculator-canvas";
+import { toast } from "sonner";
 
 export const useTileCalculator = ({
   tileHeight,
@@ -46,6 +47,8 @@ export const useTileCalculator = ({
 
   // --- Functions
   const draw = useCallback((ctx: CanvasRenderingContext2D) => {
+    console.log("Drawing canvas with lines:", lines);
+
     const { width, height } = ctx.canvas;
 
     // Clear and set up transforms
@@ -262,6 +265,8 @@ export const useTileCalculator = ({
   // Mouse Handlers
   const handleMouseDown = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
     if (e.button === 1 || (e.button === 0 && e.ctrlKey)) {
+      e.preventDefault();
+
       // Middle mouse or Ctrl+Click for panning
       setIsPanning(true);
       setLastPanPoint({ x: e.clientX, y: e.clientY });
@@ -301,7 +306,13 @@ export const useTileCalculator = ({
       });
 
       if (hasIntersection) {
-        setError("Garis tidak boleh berpotongan dengan garis lain!");
+        const errorMsg = "Garis tidak boleh berpotongan dengan garis lain!";
+        setError(errorMsg);
+        
+        toast.error(errorMsg,{
+          position: "bottom-center"
+        });
+        
         return;
       }
 
