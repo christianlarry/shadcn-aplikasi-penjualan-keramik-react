@@ -75,6 +75,9 @@ export const SortPopover: React.FC<SortPopoverProps> = ({ value, onValueChange }
 
   const showOrderControl = sortType === "price" || sortType === "name";
 
+  const ascLabel = sortType === "price" ? "Naik" : "A-Z"
+  const descLabel = sortType === "price" ? "Turun" : "Z-A"
+
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
@@ -119,13 +122,13 @@ export const SortPopover: React.FC<SortPopoverProps> = ({ value, onValueChange }
                   onValueChange={(val: "asc" | "desc") => handleSortOrderChange(val)}
                   className="grid grid-cols-2"
                 >
-                  <ToggleGroupItem value="asc" aria-label="Naik">
-                    <ArrowUp className="mr-2 h-4 w-4" />
-                    Naik
+                  <ToggleGroupItem value="asc" aria-label="Naik" size="sm">
+                    <ArrowUp className="h-4 w-4" />
+                    {ascLabel}
                   </ToggleGroupItem>
-                  <ToggleGroupItem value="desc" aria-label="Turun">
-                    <ArrowDown className="mr-2 h-4 w-4" />
-                    Turun
+                  <ToggleGroupItem value="desc" aria-label="Turun" size="sm">
+                    <ArrowDown className="h-4 w-4" />
+                    {descLabel}
                   </ToggleGroupItem>
                 </ToggleGroup>
               </div>
