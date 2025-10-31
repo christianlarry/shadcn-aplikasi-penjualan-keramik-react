@@ -1,13 +1,13 @@
 
 import { Button } from "@/components/ui/button"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { FILTER_OPTIONS_CONFIG, SORT_PRODUCT_OPTIONS } from "@/features/catalog/constants/catalog"
+import { FILTER_OPTIONS_CONFIG } from "@/features/catalog/constants/catalog"
 import { useCatalog } from "@/features/catalog/contexts/catalog-context"
 import { X } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useLocation } from "react-router"
 import { useSearchParams } from "@/hooks/use-search-params"
 import SearchInput from "@/components/common/input/search-input"
+import { SortPopover } from "./sort-popover"
 
 interface Props{
   config:{
@@ -101,23 +101,10 @@ const CatalogTop = ({
               onChange={(val)=>setSearchInput(val)}
               placeholder="Cari: Nama | Deskripsi | dll"
             />
-            <div className="flex items-center gap-2">
-              <Select onValueChange={(val)=>setSortInSearchParams(val)} value={sort ?? ""}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Sort By" />
-                </SelectTrigger>
-                <SelectContent>
-                  {SORT_PRODUCT_OPTIONS.map(opt=>(
-                    <SelectItem value={opt.value} key={opt.value}>
-                      {opt.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {sort &&
-                <Button size="icon" variant="outline" onClick={()=>setSortInSearchParams(null)}><X/></Button>
-              }
-            </div>
+            <SortPopover
+              value={sort}
+              onValueChange={(val)=>setSortInSearchParams(val)}
+            />
           </div>
         </div>
         {filters.length > 0 &&
